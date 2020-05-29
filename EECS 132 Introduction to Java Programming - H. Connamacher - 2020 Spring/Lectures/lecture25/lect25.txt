@@ -1,0 +1,132 @@
+Continuing with Linked Lists
+
+Recall the LLNode class:
+
+	public class LLNode<T> {
+	  private T element;
+	  private LLNode<T> next;
+
+	  public LLNode(T element, LLNode<T> next) {
+	    this.element = element;
+	    this.next = next;
+	  }
+
+	  public T getElement() {
+	    return element;
+	  }
+
+	  public void setElement(T element) {
+	    this.element = element;
+	  }
+
+	  public LLNode<T> getNext() {
+	    return next;
+	  }
+
+	  public void setNext(LLNode<T> next) {
+	    this.next = next;
+	  }
+	}
+
+Now, let us create the linked list:
+          +---+---+ 
+  list -> | 1 | *-+--x
+          +---+---+   
+  
+  LLNode<Double> list = new LLNode<Double>(1.0, null);
+
+Now, let us add 2 after 1.  Creating the node is the same, but we have to change the value of the first node's next pointer to point to the second node:
+
+          +---+---+    +---+---+
+  list -> | 1 | *-+--> | 2 | *-+--x
+          +---+---+    +---+---+ 
+
+  list.setNext(new LLNode<Double>(2.0, null));
+
+Now, let us add 0 before 1.  We need to create a box that points to 1.  Where is 1's box currently stored?  In list.  Then we must change the value of list to point to the new box:
+
+          +---+---+    +---+---+    +---+---+
+  list -> | 0 | *-+--> | 1 | *-+--> | 2 | *-+--x
+          +---+---+    +---+---+    +---+---+
+
+  list = new LLNode<Double>(0, list)
+
+A final example:
+  Place 1.5 between 1 and 2 in the above list.
+  We must be careful to do things in the right order, or we will break the list.
+  1) Create a new node for 1.5.
+  2) Move the next pointer for the 1.5 node to point to the 2 node.
+  3) Move the next pointer for the 1 node to point to the 1.5 node.
+
+  If we did step 3 before step 2, we would lose all access to the 2 node.
+
+    What is the name of the next pointer of 1?  list.next.next
+      To do step 2, we need to change the new's next pointer to list.next.next, i.e. what the 1's box is pointing at.
+      To do step 3, we need to change list.next.next to point to the new box.
+    We can do this in one line of carefully organized code!
+
+	Step 1) LLNode<Double> newNode = new LLNode<Double>(1.5, null);
+	Step 2) newNode.setNext(list.getNext().getNext());
+	Step 3) list.getNext().setNext(newNode);
+
+    Or in one line:
+	list.getNext().setNext(new LLNode<Double>(1.5, list.getNext().getNext());
+
+
+Abstract Data Types
+  An abstract data type is a data structure that guarantees certain behaviors to the user, but it keeps its implementation details hidden.
+  By hiding the implementation details, we are able to change them if we discover a better way to do things without breaking the code that uses the
+    data structure.  We also can prevent code that uses the data structure from accidentally breaking the data structure.
+
+  Examples:
+     Strings are an ADT.  You are guaranteed certain behavior such as accessing a character from a location and appending strings, but you are not told how 
+they are implemented (though they are probably implemented as an array of chars).
+     JFrames are an ADT.  You are guaranteed certain behavior such as changing its size, displaying it on the screen, but you do not know exactly how the
+Java Swing developers chose to implement the window.
+
+  We will create the LinkedList as an abstract data type.  The list is going to be a list of LLNodes, but we will keep the details away from the users
+of the LinkedList so that code that uses the LinkedList can not accidentally break the list.
+
+Creating a LinkedList class
+  A LinkedList will store a list of LLNodes.  The only field we need is to store the node that is the first node of the list.  We call this the "first" or "head" of the linked list.
+  There are several ways we can implement the linked list.  We decided that if a list is empty, its front should be a null pointer, to indicate that there are
+no nodes in the list.  Another option would be to create a special node that acts as a "caboose" to the linked list.  No implementation technique is wrong
+as long as the list works properly.  If we correctly create the LinkedList as an abstract data type, we should be able to switch between implementations and
+code that uses the LinkedList class will still operate exactly the same.
+
+  Note that the LinkedList will need to use a generic to specify the type that will be stored in the list, and we want each LLNode in the list to use the same generic.
+
+	public class LinkedList<T> {
+	  private LLNode<T> firstNode;
+
+	  public LinkedList() {
+	    firstNode = null;
+	  }
+
+  Now, let use crete a method to add an element to the front of the list.
+
+	  public void addToFront(T element) {
+            firstNode = new LLNode<T>(element, firstNode);
+	  }
+
+  If we want to allow polymorphism and extending for this class, we should use getter/setter methods for firstNode, but we don't want to make them public because that would let 
+   any code using the LinkedList (rather than any code that "is" a LinkedList) to need to understand how the head of the linked list works.  In particular, the getter/setter methods
+   return an LLNode.  Having code outside the LinkedList know about LLNodes would violate the "keep implementation details hidden" nature of an abstract data type.
+ 
+  The solution is to make the getter/setter methods "protected".  Recall that protected means it can be used in this class or any class that extends this class.  (Why would private not work? Hint: getter/setter's are used so to making extending the class easier.)
+
+	  public void addToFront(T element) {
+            setFirst(new LLNode<T>(element, getFirst());
+	  }
+
+  How about testing if a list is empty? 
+
+	public boolean isEmpty() {
+ 	  return getFirst() == null;
+	}
+
+  How about removing an element at the the front? 
+
+	public T removeFromFront() {
+
+    - to be continued -

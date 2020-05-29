@@ -1,0 +1,188 @@
+Recall the primitive types we use for most of our programming:
+   int (32-bits, integer), double (64-bits, floating point number), char (16-bits, a character), boolean (1-bit (*), true or false)
+
+   You saw some strange behavior with the int type in lab 1.  Recall:
+        > Integer.MAX_VALUE
+        2147483647
+        > 2147483647 + 1
+        -2147483648
+
+   Why does Integer.MAX_VALUE + 1 become a large negative number?
+     It is because the int type is only 32-bits so there is a limit to the number of values it can store.  The reason it "wraps" to negative numbers
+       is a trick of the binary representation currently used for int.
+
+   Here is another strange behavior, but this time with the double type:
+        > 1.3 + 1.3
+        1.6
+        > 1.3 + 2.3
+        3.5999999999999996
+
+  Why does 1.3 + 1.3 equal 2.6, but 1.3 + 2.3 does not equal 3.6?
+    The numbers are represented in binary, and some fraction numbers (such as 3/10) can not be represented exactly.
+    This is similar to how 1/3 and 1/7 can not be represented exactly in decimal.
+    If the error in the representation is small enough, the Java routine that prints the numbers will round the printed number to a "nice" decimal value.
+    For 1.3 + 2.3, the errors in the representation just happen, when added, to be big enough so that the result is not "close enough" to 3.6.
+
+  Why should you care?
+   Mathematics in Java is not the same as "real" mathematics.  Errors will crop up due to the fixed size of the numeric data types that would not appear if we
+   were manipulating the numbers using "real" mathematics.  A programmer must always be alert to situations where such errors could occur so that they do not cause
+   strange program behavior.
+
+   For example, you should avoid testing for equality with floating point values (float or double).  If you do any computation on those
+    values, there could be small errors that perturb the value slightly.  Instead, it is better to test that the value is within some
+    range.  So, instead of testing if a floating point value is exactly 0, test if it is between -.000001 and +.000001.
+
+Introduction to Variables
+
+  A variable is the name given to a location in memory.  In Java, variable has a type associated with it.
+  A variable is used to store data.  In Java, you can only store values with the appropriate type into the variable.
+
+  Creating Variables
+       We call creating a variable "declaring the variable"
+       A declaration has the form:
+                type variable-name
+
+       Two examples:
+                int x
+                double temperature
+
+       Java now sets aside a chunk of memory for each varialble.  The first is a 32-bit chunk that is associated with the name "x".
+        Java will make sure that only values of type int can be stored in here.  (Remember that the type is what WE decide the value represents.  The computer does not care.  It is happy storing any 32-bit values there.)
+        The second is a 64-bit chunk of memory that is associated with the name "ratio", and we can store values of type long in it.
+
+  Storing Values in Variables
+     We call storing a value "assigning a variable".
+
+      To store a value in the variable, you use the = operator.
+                variable = value
+
+      For example:
+                x = 161
+                temperature = 40.75
+		
+      This is a source of confusion because the assignment operator looks like math's equality, but it is not an equality test.
+        Instead, we are storing into the memory location named "x" the data that represents the int 161, and we are
+                 storing into the memory that is named "temperature" the data that represents the double value 40.75.
+
+      Remember that Java is a strong typed language so
+                x = 3.1415   <=  error, you promised x would store int, and you are giving it a double
+                x = (int)3.1415   <= this is now legal, and it stores value 3 into the location named "x"
+
+      To read the value stored in memory at a location, just use the name of the location:
+            x   <= this evaluates to whatever value is stored in the memory location in "x", interpreted as data type int
+
+	    int y
+	    y = x + 50      <= this gets what is stored in x, adds 50 to it, and stores the result in the variable y
+
+Automatic Typecasts (called "type coercions")
+
+      Values are automatically converted "narrower" to "wider" types.  A conversion from a "wider" to a "narrower" type
+    requires an explicit typecast.  Generally, when converting to a wider type, Java converts the value to be as close as
+    possible to the original value.  When converting to a narrower type, Java generally truncates the value.
+
+        Widest:   double, float, long, int, short/char, byte  :  Narrowest
+
+   Note that short and char are at the "same" level, and so you must explicitly typecast between these two types.
+   Also note that boolean is not in this list.  You can not convert a value of type boolean to any other primitive.  You can not convert another primitive value to boolean.
+
+             int y
+             y = 3.0       <-  This is illegal because 3.0 is type double, double is wider than int, and we need an explicity typecast
+             y = (int)3.0  <-  This is legal because the typecast is explicit.
+             y = 'A'       <-  This is legal because 'A' is type char, char is narrower than int, so the 'A' will be automatically converted to type int
+
+Primitive operations and their type rules:
+  Following are the type rules for the different primitive operators.  Please see your textbook for precedence and associativity rules.
+  A few additional "shortcut" operators will be discussed around midterms.
+  1) arithmetic operators:  +, -, *, /, %
+  2) unary arithmetic operators:  +, -
+  3) binary operators (not used in EECS 132, they manipulate the binary representations): &, |, ^, ~, <<, >>, >>>
+
+     The above operators have the same type rules:
+       a) The two operands (or one operand for the unary operators) must be a numeric primitive type (i.e. not boolean)
+       b) The narrower operand is automatically widened to match the wider operand, and if both operands are narrower than
+            int, they are automatically widened to int.
+       c) The result is the type of the wider operand, or int if both operands are narrower than int
+
+	ex:  5.0 + 3   (the result type is double because of the 5.0, before the addition is performed, the 3 is widened to 3.0)
+	     'a' + 'b'  (the result type is int and both operands are widened to int before the addition is performed)
+	     (short)3 + (byte)5   (the result is type int, and both operands are widened to int before the opeation is performed)
+
+  4) comparison operators:  >, <, >=, <=
+      The type rules:
+        a) The operands must be a numeric primitive (a non-boolean primitive)
+        b) The result type is boolean
+        c) The narrower operand type is automatically widened before the operation is performed
+
+	3 <= 3.1    <-  Converts the int 3 to double 3.0 and then compares 3.0 to 3.1
+	3 < 4 < 5   <-  Illegal.  First computes 3 < 4, but then the left operand of the second < is type boolean!
+
+  5) boolean operators: &&, ||, !, &, |   (these are AND, OR, NOT, AND, and OR)
+     The type rules:
+	a) The operands (or operand for !) must be boolean
+        b) The result is boolean
+	c) && and || use "short-circuit evaluation".  If the result value is known from just the left operand, the right operand is not evaluated:
+
+   AND: &&
+      left-operand  right-operand     result
+      true          true              true
+      true          false             false
+      false         NOT EVALUATED     false
+
+   (Here is || which we did not get to in lecture)
+   OR: ||
+      left-operand  right-operand     result
+      true          NOT EVALUATED     true
+      false         true              true
+      false         false             false
+
+    We usually use && and || instead of & and |.  The results are the same, and we ofthen take advantage of the short-circuit feature.
+
+     For example, suppose we want to test if (y / x) > 1, but this test can cause an error if x stores 0 (divide by 0 error).
+	We can then write the test as:
+		if ((x != 0) && ((y / x) > 1))
+	so that if x stores 0, we get "false" and do not evaluate y / x
+
+      Suppose we want to test x < y < z.  While that is not valid Java, we can get something equivalent using &&:
+	(x < y) && (y < z)
+
+  6) equality operators:  ==, !=
+      The type rules:
+	a) The operands can be any type (primitive or non-primitive, and The narrower operand is automatically widened to the wider operand's type.
+            - it is an error if the automatic type conversion is not allowed
+        b) The result is boolean
+	c) The value is determined by comparing the boolean values of the two operands (after the automatic widening).
+
+	ex: 
+            5 == 5.0			  <- first converts 5 to 5.0 before comparing
+	    1 != true			  <- illegal because you can't convert between int and boolean
+	    false != true		  <- legal because both operands are the same type
+
+  7) assignment opertor:  =
+     a) The left operand must evaluate to a variable.  The variable can be any type (primitive or non-primitive).
+     b) The type of the right operand must be the same or narrower as the type of the variable on the left (*)
+     c) The result is the same type as the variable and the value that was stored in the variable.
+
+     Because = has a value and a type, we can place assignment operators anywhere in our code that expects a value.
+
+	Ex:  double x
+	     x = 1       <-  legal, the int 1 is widened to double 1.0 and stored.  The result is type double and value 1.0.
+
+	     int y
+	     y = 1.0     <-   illegal.  1.0 is wider than int
+
+	     x = y = 3   <-   legal. the y = 3 happens first.  The result is the int value 3, now we get x = 3, and the 3 is widened to 3.0
+	                      The result of this expression will have 3 stored in y, 3.0 stored in x, and the expression will evaluate to the double 3.0
+	
+
+        (*) EXCEPTION TO 7b (I did not get to this in lecture):
+		If the type on the right is int, the variable on the left is narrower than int, and the expression is on the right is ONLY constants and primitive operators,
+            	and the value "fits" inside the range of values for the narrower type, then the value on the right is automatically converted to the narrower type of the variable.
+
+	   char c = 'a' + 5     <- legal
+	   char c = x           <- not legal (no matter what the type of x is  --- do you see why?)
+	   char c = 'A' + x     <- not legal for the same reason as above
+	   char c = Character.MAX_VALUE + 1  <- not legal because the result of the + is too large to fit in a char type.
+	   int  x = Integer.MAX_VALUE + 1    <- legal because the result of + is int
+	   short s = 1000000 / 10000         <- legal.  The expression is only constants and primitive operators and the result is 100 which is int but fits into a short type.
+
+

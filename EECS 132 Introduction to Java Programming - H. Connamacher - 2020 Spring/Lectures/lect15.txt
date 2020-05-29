@@ -1,0 +1,83 @@
+Arrays
+
+  An array is a collection of variables of the same type, stored in a contiguous chunk of memory.
+
+  We can create an array to hold variables of any type:
+     int[] array1      - array1 is an array that will store ints
+     JFrame[] array2   - array2 is an array that will store JFrames
+     double[] array3   - array3 is an array that will store doubles
+
+  We can initialize the array using the new operator and stating how many variables (elements) will be in the array:
+        array1 = new int[100];
+  array1 now stores the address for an array that contains 100 int variables.
+ 	array2 = new JFrame[30];
+  array2 now stores the address for an array that contains 30 JFrame variables.
+
+  Now, to access each element, we again use the square brackets.  To store a value in the first element (variable) of the array:
+        array1[0] = 12;
+
+  Remember, the we start counting from 0 in Java!
+
+  Each element of an array is a variable of the given type.  So all the rules of variables apply:
+        array1[2] = 3.15   <- Illegal!  We are trying to store a double in a variable of type int
+        array1[2] = 7      <- Legal!
+
+
+Array disadvantage:
+  Because the array is stored in contiguous memory, we can not change the length (number of variables) of the array once it is created.
+
+Array advantage:
+  Because the array is stored in contiguous memory, we can access each element in a single step, no matter how large:
+	int[] a = new int[1000000];
+    For example, to access a[95436], we do not need to run through the array to the 95436'th entry.
+    We know the address of a (it is stored in the variable a), we know the byte size of the type of the array (for example, each int is 4 bytes)
+     and we know which one we want (index 95436).
+    So the address of a[95436] is:  (address of a) + 4 * 95436
+
+How do we fill an array?
+  Usually with a loop. 
+	JFrame[] frames;           // frames will store (the location to) an array that stores JFrames
+        frames = new JFrame[30];   // now frames has the address of a chunk of memory divided into 30 variables of type JFrame.  But no JFrame is yet stored in frames.  To place a separate JFrame in each one:
+
+	for (int index = 0; index < frames.length; index = index + 1) {
+	  frames[index] = new JFrame();
+	}
+
+
+Our first method with arrays:
+  Create a method that reverses the contents of an array
+  Each slot in the array is just a variable and so we will use variable assignment.
+  We will need one extra variable to store values so we do not lose any values.
+	1. save the value at the front of the array,  array[index]
+	2. store the value at the back of the array array[array.length - index - 1] into the back of the array array[index]
+	     - this overwrites the value in array[index].  Good thing we saved it!
+	3. store the saved value into array[array.length - index - 1]
+
+   When do we stop the loop?  You might be tempted to say when index reaches the end (array.length), but that is not correct.  Can you see why?
+
+
+	public static void reverse(int[] array) {
+	  for (int index = 0; index < length / 2; index = index + 1) {
+	    int save = array[index];
+	    array[index] = array[array.length - index - 1];
+	    array[array.length - index - 1] = save;
+	  }
+	}
+
+
+Loop Testing
+
+  How to test loops?
+  Here is a good "rule of thumb" to follow to help you catch most of the usualy bugs that can show up in loops:
+  1) Test 0, test 1, test many
+  2) Test first, test middle, test last
+
+  Consider the reverse method.  What does "test 0, tests 1, test many" mean?
+    One interpretation is test arrays of length 0, 1, and many.
+    Another interpretation is test arrays where you have 0 things to flip, one pair to flip, and many pairs to flip.
+
+  What does "test first, test middle, test last" mean?
+   One interpretation is to make sure the outermost pair is properly flipped, and the middle element is properly handled.  This means we have to consider odd and even length arrays.
+
+  So, this guide suggests that we have to test the following array lengths:  0, 1, 2 and two large lengths where one is odd and the other is even.
+

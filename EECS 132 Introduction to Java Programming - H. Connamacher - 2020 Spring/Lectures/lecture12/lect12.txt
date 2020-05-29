@@ -1,0 +1,195 @@
+Introduction to Loops
+
+Loops are a technique that allow us to execute a statement many times.  This is what gives a computer program its true power because computers can execute statements in 
+loops millions of times a second.
+
+There are 4 basic loop structures in Java.
+  1. while loop
+  2. for loop
+  3. do-while loop
+  4. foreach loop
+The first three are general purpose loops.  The fourth is a special loop form that can only be used with arrays and Iterable types.  We will cover foreach loops later in the term.
+
+1. The while loop:
+
+	while (condition)
+	   loop-body-statement
+
+      loop-body-statement is a single statement, simple or compound
+      condition is any boolean expression
+
+  While loop behavior:
+    1) the condition is evaluated
+    2) if the condition is true:
+        2a) the loop body statement is executed
+        2b) repeat step 1
+   if the condition is false, go to the next statement of the program
+
+Example 1: A silly example that prints "Hello" forever:
+
+	while (true)
+	  System.out.println("Hello");
+
+  Note that we can put anything that evaluates to a boolean inside the parentheses.
+
+Example 2: A loop that prints "Hello" never:
+
+	while (false)
+	  System.out.println("Hello");
+
+Example 3: An example that prints "Hello" 5 times:
+    We need to keep track of how many times we have printed "Hello".  So we need a variable to store that number.
+
+	int count = 0;
+	// count stores the number of times we have printed "Hello"
+	while (count < 5) {
+	  System.out.println("Hello");
+	  count = count + 1;
+	}
+        // note: at this point in the code, count stores 5
+
+    What does count remember?  The number of times we have printed out "Hello".
+    Are we using count correctly?
+      - At the beginning, we have not printed anything and count is 0. 
+      - Each time we print "Hello", we add one to count.
+      So, our use of count matches what we want it to do.
+    What is true at the end of the loop?   count stores 5
+      We wanted to print 5 times, and count stores 5 so we did print 5 times.
+
+
+2. The for loop
+
+	for (initial statement; condition; increment statements) 
+	   loop-body-statement
+
+      the initial statement is a single statement
+      increment statements are 0 or more statements, separated by commas (no terminating semicolons)
+      condition and loop-body-statement are the same as for while loops.
+     
+  For loop behavior:
+    1) the initial statement is executed
+    2) the condition is evaluated
+    3) if the condition is true
+        3a) the loop body statement is executed
+	3b) the increment statements are executed
+	3c) repeat step 2
+    if the condition is false, go to the next statement of the program
+
+
+Example 4: Write a loop that prints "Hello" 5 times, but this time using a for loop.
+
+	// numHellos stores the number of times we have printed "Hello"
+	for (int count = 0; count < 5; count = count + 1)
+	  System.out.println("Hello");
+
+        // note: at this point in the code count does not exist
+
+   Note the close similarity to the while loop we wrote.  Notice where the different statements of the while loop ended up in the for loop.
+
+While loops and for loops in Java are really the same thing, just different formatting.
+
+  for (initial-statemnet; condition; increment-statements)
+    loop-body-statement
+
+is the same as:
+  {
+    initial-statement;
+    while (condition) {
+      loop-body-statement
+      increment-statements
+    }
+  }
+
+Note the encapsulation in a compound statement.  This means that any variables declared in the for statement will not exist once the for statement completes.
+
+
+3. The do-while loop
+
+   do {
+      loop-body-statement(s)
+   } while (condition);
+
+ do-while-loop behavior:
+    1) Execute the loop-body-statement(s)
+    2) Evaluate the condition
+       If the condition is true, repeat step 1
+       If the condition is false, go to the next statement of the program
+
+   The do-while loop should be avoided except in cases where you really need the body of the loop to execute before testing the condition.
+   The problem with the do-while loop is that, if you accidentally drop the "do", the rest of the code is still valid Java, but it does something entirely different!
+      It becomes a compound statement followed by a while loop!
+
+
+When to use a while loop and when to use a for loop?  Your choice.  The two are exactly the same, just ordered differently.
+   Some guidelines:  
+     * for loop advantage is that the code that describes the loop is all in the header.
+       for loops are good when the loop is controlled by variable(s) and there is a simple increment.  
+
+     * while loop advantage is that the syntax is simpler.
+       while loops are good when the increment is complicated 
+
+
+
+  We will do two examples of while loops.  The while loop syntax:
+	while (condition)
+	  statement;
+
+  Repeat until the condition is false: evaluate the condition and execute the statement.
+
+Example 1:  Euclid's Greatest Common Divisor algorithm
+
+   We want to compute the greatest common divisor of two positive integers: a and b
+	If a % b = 0 then the greatest common divisor is b
+	Otherwise gcd(a,b) = gcd(b, a % b)
+
+   This gives us a loop.  For example:
+	gcd(30, 12) = gcd(12, 6) = 6
+	gcd(24, 15) = gcd(15, 9) = gcd(9, 6) = gcd(6, 3) = 3
+
+  	public static int gcd(int a, int b) {
+	  while (a % b ! = 0) {
+	    int r = a % b;
+	    a = b;
+	    b = r;
+	  }
+	  return b;
+	}
+
+    This algorithm seems to require a > b.  (It does not, trace the loop and see what happens if b > a.)
+
+
+Example 2: Computing a square root using Newton's method
+  Here is a first crack that we did in lecture:
+
+  A little background.  Please look up Newton's method if you do not understand how it works.
+    Let x1 be a guess for the square root of n.  
+    Let f(x) = x * x - a   (Note that f(x) = 0 when x is the square root of a.
+    Since the plot of f(x) is concave up, we can get a new guess by following the tangent to the curve from the current guess (x1, f(x1)) to (x2, 0).  x2 is the new, better guess.
+    Using the slope formula were m is the slope of the tangent, we have
+	m = (f(x1) - 0) / (x1 - x2)
+    Note that m = f'(x1) = 2 * x1
+	2 * x1 = f(x1) / (x1 - x2)
+    or
+      	x2 = (x1 * x1 + a) / (2 * x1)
+
+    We then repeat setting x1 to be x2 and x2 to be the new, even better, guess.
+    When do we stop?  The class decided to stop when the difference in the guesses is really small:  x1 - x2 < 1e-10.
+      Another suggestion is to stop when the best guess is really close the the square root:  x1 * x1 - a < 1e-10.
+    Another suggestion is to stop when the difference between s small.
+
+    This is a good situation for a while loop because the increment is complicated.
+    Here is the code
+
+	public static double squareRoot(double a) {
+	  double x1 = ???;          // the square root guess of the previous iteration
+ 	  double x2 = ???;          // the best current guess for the square root
+
+	  while (x1 - x2 > 1e-10) {
+            x1 = x2;
+            x2 = (x1 * x1 + a) / (2 * x1);
+	  }
+	  return x2;
+	}
+
+   What should the initial x1 and x2 be?  
+

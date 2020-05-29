@@ -1,0 +1,80 @@
+Recall last time:
+  Remember that a computer is just wires and switches.  All data is represented by wires that are ON or OFF. (1 or 0)
+  A bit is the smallest unit of information.  A bit is 2 values.
+
+  We get more than 2 values by grouping wires together.  (A byte is 8 bits (8 wires), and thus a byte can have 256 different values.)
+  To a computer, all data is just 0's & 1's.  All data is just a number.
+  The ALU on the computer can only do simple operations on the data (add, subtract, multiply, divide, "and", "or")
+
+Data Types:
+  The type of a piece of data is what the piece of data represents.  It is specified by the programmer and by rules of the programming language.
+
+   Java's Strict Typing:
+       Java is a "strongly typed" language.  That means that every piece of data will have a well defined type and unambiguous type and the compiler will verify that every type is used correctly.
+       The programmer must set the type of every expression (either explicitly or implicitly), and the Java compiler will verify that each type is used correctly before you can run your program.  Java is very strict.  If a type is used incorrectly, an error is given.
+       For example, if you specify that a piece of data is English text, then Java will only allow you to do actions appropriate for text on it.
+    (Java was built to replace C/C++ which has types, but does not have strict safety restrictions.)
+
+  There are two kinds of types in Java: 
+    1.  primitive types : there are 8 primitive types, and they are all pre-defined in the Java language
+    2.  compound types (called reference types in your book) : there is a potentially infinite number of such types; many are pre-defined in Java, but programmers can make new ones as needed
+
+Primitive Types in Java
+
+ The following are the eight primitive types:
+
+  int:  32-bits of data.  Represents an integer between -2^31 and +2^31 - 1.
+	All whole numbers in your program default to the type int.
+	  example:  5, -30, 0  are all ints
+
+  double: 64-bits of data.  Represents a "floating point" number (a number with a decimal point) in scientific notation.  
+        Roughly 52 bits for the mantissa, 11 bits for the exponent, 1 sign bit.
+	All numbers with decimal points or in scientific notation in your program default to the type double.
+        The largest/smallest values that can be represented are +/- 4.9 x 10^-324 and +/- 1.7 x 10^308.
+	   example:  3.1415, -0.3,  10.,  3e12, 23E-104  are all doubles
+             (The e/E is for scientific notation.  The numbers above are 3x10^(12) and 23x10^(-104).  It does not matter if you use e or E.)
+
+  char: 16-bits of data.  Represents a character. 
+	char values are single characters inside single quotes.
+	  example:  'a', 'x', ' ', '?', '3'  are all char values.
+           (Note that '3' and 3 are not the same thing!  The first is a binary value that Java interprets as the character 3, and
+            the second is a (different) binary value that Java interprets as the whole number 3.)
+
+  boolean:  1-bit of data (really stored as 8-bits).  Represents either true or false.
+  
+We will use int, double, char, and boolean in projects and tests.  Here are the other 4 primitive types for your reference (they could show up in quizzes or labs):
+
+  short: 16-bits of data.  Represents an integer between -2^15 and +2^15 - 1.
+
+  byte: 8-bits of data.  Represents an integer between -2^7 and +2^7 - 1.
+
+  long: 64-bits of data.  Represents an integer between -2^63 and +2^63 - 1.
+	To enter a long value, you use the letter L (upper or lower case).
+	  example:   10L, 3000000L  are all long values
+
+  float: 32-bits of data.  Binary, scientific notation.  Roughly 23 bits for the mantissa, 8 bits for the exponent, 1 sign bit.
+        The largest/smallest values that can be represented by floats are +/- 1.4 x 10^-45 and +/- 3.4 x 10^38
+	To enter a float, you use F (upper or lower case).
+	   example:  3.14F  is a float value
+
+  Please note that the number of bits of the type determines how many different values it can store.
+  Even though a long stores numbers between -2^63 and +2^63, and double stores values between +/- 4.9 x 10^-324 and +/- 1.7 x 10^308,
+  the double stores the same number of different values as the long does.  The long can store every integer in that range, the double
+  stores only some of the possible floating point numbers in that range.  Thus double cannot store all the integer values long can.
+
+
+Typecasts (type conversions)
+
+  Java allows the programmer to convert a value of one type into a value of a different type.
+  To do this, you place the desired type in parentheses and immediately to the left of the value.
+	(desired-type) value
+
+   For example:
+	   (double)3     converts the int value 3 to the double value that is the closest to 3.  In this case, the value is 3.0.
+	   (short)100    converts the int value 100 to the short value that is the closts to 100.  In this case, the value is still 100 (but stored in 16 bits instead of 32 bits).
+	   (int)3.8	 coverts the double value 3.8 to the int value 3
+	   
+      The typecast must "make sense".  In Java, you can convert between all the numeric primitive types, but not between boolean and
+        a numeric primitive so:
+
+

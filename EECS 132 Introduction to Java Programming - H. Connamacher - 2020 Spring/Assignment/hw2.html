@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+     "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+<title>EECS 132: Homework Project 2</title>
+</head>
+
+<body>
+<h2>Programming Project 2</h2>
+<h3>Due Friday, March 6 at 11:59pm</h3>
+
+<p><em><strong>IMPORTANT:</strong> Read the
+<strong>Do's and Dont's</strong>
+in the <strong>Course Honor Policy</strong> found on Canvas. </em>
+</p>
+
+<h3>I. Overview</h3>
+
+<p>This second programming assignment is to give you practice writing loops and manipulating strings and arrays.
+<strong>Do not use arrays on a problem involving Strings, and do not use Strings in a problem involving arrays.</strong></p>
+
+
+
+<h3>II. Code Readability (20% of your project grade)</h3>
+
+<p>As with the last project, you are required to have code that is easy for another person to read and understand.
+To accomplish that, the class will have certain rules about how your code should look.</p>
+
+<p><strong>To receive the full readability marks, your code must follow the following guideline:</strong>
+<ul>
+<li>You should place a comment at the top of the file that contains your name
+and a short description of the purpose of the class.</li>
+<li>You should place a <em>short</em> comment before (directly above) each method describing the method.  The comment should
+be only describe <em>what</em> the method does, not <em>how</em> it does it.  Do not simply copy the descriptions
+below for your comments.</li>
+<li>You should place a short comment directly above each field (should you really have any?)
+indicating the purpose of the variable.</li>
+<li>You should place a short comment above or to the right of each local variable explaining the purpose of the variable.  <em>Variables that are only used as loop indexes do not need to have comments.</em></li>
+<li>You should place a short comment above each loop explaining how the loop works.  Ideally, you should list the goal of the 
+loop, any required precondition for the loop, and if you can, a good iteration subgoal for the loop.</li>
+<li>Any other complicated code such as code the has lots of if statements or variables should contain <em>short</em> comments to help the reader.  The comments can either be above the code fragment or to the right, aligned in a column.</li>
+<li>Remember to use good style: everything should be indented nicely, variables should have good names, there should be a blank line between each method.</li>
+</ul></p>
+
+<hr>
+
+<h3>III. Program Testing Document (20% of your project grade)</h3>
+
+<p>As with the previous project, you are required to submit a document demonstrating that you thoroughly tested your program.
+In this case, it means documenting tests for each of the methods listed below.
+If you are unable to complete a method above, you should still
+describe tests that would test the method had it been completed.</p>
+
+<p>Hints for testing loops.  Your tests need to, at the minimum cover the following cases:
+<ol>
+<li><strong>Test 0, test 1, test many:</strong>  This means you have to test cases where the parameters, if they are integers,
+are 0, 1 or some value other than 1.  If the parameters are strings, you have to test strings of length 0, 1, and more than 1.
+If the strings must contain certain data, you need to test cases where they contain 0, 1, and more than 1 of the desired data.</li>
+<li><strong>Test first, last, and middle:</strong>  In cases where you have to search in or modify a string, you need to test
+cases where the item to be found or modified is the first character of the string, the last character of the string, or somewhere
+in the middle of the string.</li>
+</ol></p>
+
+<p><strong>What must go in the report:</strong> For each method below, your report should describe, in English, what &quot;<em>test 0, 1, many</em>&quot;
+and &quot;<em>test first, middle, last</em>&quot; mean for each of the methods.  Then, you should list the specific tests that you will do, what the expected
+output is, and then (if you completed the method) a cut-and-paste from DrJava showing the actual test. </p>
+
+<p><strong>JUnit</strong>: you recently learned about JUnit in lab.  JUnit will be required for future homeworks, and you are welcome
+to use it with this homework.  If you choose to write JUnit tests for your code,
+you do not need to include the actual tests in your report.  Your JUnit file should include comments with each test that link to the report and indicate what
+you are testing. For example, if your report indicates that the method requires a test with a string of length 0, your JUnit class should have such a test and
+a comment on the test noting that it is the test of a length 0 string that your report described.  Try to organize the JUnit class and report to make it easy for
+a reader to jump back and forth between the report and the tests.</p>
+
+<hr>
+
+
+<h3>IV. Java Programming (60% of your grade)</h3>
+
+<p><strong>Guidelines for the program</strong>:
+<ul>
+<li>All methods listed below must be <tt>public</tt> and <tt>static</tt>.</li>
+<li>If your code is using a loop to modify or create a string, you need to use the <tt>StringBuilder</tt> class from the API.</li>
+<li>Keep the loops simple but also efficient.  Remember that you want each loop to do only one "task" while also avoiding unnecessary traversals of the data.</li>
+<li>No additional methods are needed.  
+However, you may write additional <em>private</em> helper methods, but you still need to have efficient and simple algorithms. Do not write helper methods that do a significant number of <em>unnecessary</em>
+traversals of the data.</li>
+<li><strong><em>Important</em></strong>: you must not use either <tt>break</tt> or <tt>continue</tt> in your code.  These two commands are often used to compensate for
+a poorly designed loop.  Likewise, you must not write code that mimics what <tt>break</tt> does.  Instead, re-write your loop so that the loop logic does not need break-type behavior.</li>
+<li>While it may be tempting to hunt through the API to find classes and methods that can shorten your code, you may not
+do that.  The first reason is that this homework is an exercise in writing loops, not in using the API.  The second reason is that in a lot of cases, the API methods may shorten the <em>writing</em> of your code but increase its <em>running time</em>.
+The only classes and methods you can use are listed below.  Note: if a method you want to use from the API is not listed, you should <em>not</em> implement the method yourself so you can use it.
+Rather, you shoud look for the solution that does not need that method.</p>
+
+<p>You <em>are allowed</em> to use the following methods from the Java API:
+<ul><li>class String
+    <ul><li>length</li>
+        <li>charAt</li>
+   </ul></li>
+   <li>class StringBuilder
+   <ul><li>length</li>
+       <li>charAt</li>
+       <li>append</li>
+       <li>toString</li>
+   </ul></li>
+   <li>class Character
+    <ul><li>any method</li>
+   </ul></li>
+</ul>
+</p>
+</ul>
+</p>
+
+<p>Create a class called <tt>HW2</tt> that contains the following methods:
+<ol>
+<li><p><tt>containsSubSequence</tt> takes two <tt>String</tt>s  as input and returns a <tt>boolean</tt>:
+Returns <tt>true</tt> if the first input string contains all the characters of the second input string, in order, but not necessarily consecutively.
+<pre>
+> HW2.containsSubSequence("abracadabra", "abcd")
+true
+> HW2.containsSubSequence("abracadabra", "abdc")
+false
+</pre>
+</p></li>
+
+<li><p><tt>subtract</tt> takes two <tt>String</tt>s and returns a <tt>String</tt>:<br>
+The output string should be the same as the first input string except that you should remove the characters of the second string as follows:
+remove the first occurrence of the first character, the first occurrence of the second character that appears <em>after</em> the removed character,
+the first occurrence of the third character that appears after the first two removed characters, etc.  If there is no such character to remove, then
+nothing further is removed.
+<pre>
+HW2.subtract("gfedcbabcdefg", "acfa")
+"gfedcbbdeg"
+</pre>
+</p></li>
+
+<li><p><tt>doubleValue</tt> takes a <tt>String</tt> as input and returns a <tt>double</tt>:<br>
+The input should contain only digits, up to one period <tt>'.'</tt> and may contain one dash, but only as the first character <tt>'-'</tt>.
+The method should return the <tt>double</tt> value that input string represents.  The input may have any number of leading or trailing zeros.
+If the number is not in the correct format (more than one period, the dash is not the first character, or any other non-digit character), then
+report an error by using the statement <tt>throw new NumberFormatException()</tt>.
+Note that there may be <em>very small</em> unavoidable errors due to converting the decimal notation of the string to the binary of the double.
+<pre>
+> HW2.doubleValue("0034.143003")
+34.143003
+> HW2.doubleValue("0034.143.003")
+java.lang.NumberFormatException
+</pre>
+</p></li>
+
+<li><p><tt>everyNthCharOfWord</tt> takes a <tt>String</tt> and an <tt>int</tt> as input and returns a <tt>String</tt>:<br>
+If we call the input <tt>int</tt> value <em>n</em>, the output should contain the <em>n</em>th character of each <em>word</em> of the input string, in order.
+If the word does not have <em>n</em> characters, a space should be used for the character.  A word is defined as a consecutive sequence of English letters.
+<pre>
+> HW2.everyNthCharOfWord("Hello everyone!  This is terrific fun!", 2)
+"evhseu"
+> HW2.everyNthCharOfWord("Hello everyone!  This is terrific fun!", 4)
+"lrs r "
+</pre>
+</p></li>
+
+<li><p><tt>flipWords</tt> takes a <tt>String</tt> as input and returns a <tt>String</tt>:<br>
+Each word of the input string is reversed in the output string, though the order of the words stays the same.
+A word is defined as a consecutive sequence of English letters.
+<pre>
+> HW2.flipWords("Seventy-six trombones in the big parade!!")
+"ytneveS-xis senobmort ni eht gib edarap!!"
+</pre>
+</p></li>
+
+<li><p><tt>reverse</tt> takes a two dimensional array of <tt>int</tt> as input and returns nothing:<br>
+The method should reverse each "row" of the array, and it should also reverse the columns so that the first row now becomes the
+last row and the last row becomes the first.
+<pre>
+> int[][] board = {{1,3,6,8},{5,3,4,1},{10},{6,4,2,1,0}};
+> HW2.reverse(board)
+> board
+{ { 0, 1, 2, 4, 6 }, { 10 }, { 1, 4, 3, 5 }, { 8, 6, 3, 1 } }
+</pre>
+</p></li>
+
+<li><p><strong>Extra credit:</strong> <tt>insert</tt> takes an <tt>int</tt> and a two dimensional array of <tt>int</tt> as input and returns nothing:<br>
+The data of the array is stored in increasing order across each row.  The first element of the first row is the smallest integer
+in the array, the first element of each row is greater than or
+equal to the last element of the previous row, and the last element of the last row is the largest element of the array.  The rows
+do not have to have values, but no row is <tt>null</tt>.
+The method should insert the input value into the correct spot in the array, shifting all values over, and between rows if necessary.
+If the value is larger than or equal to all the values in the array, then nothing is changed. 
+For the extra credit, you should accomplish this with a minumum number of traversals of the data 
+and a minimum amount of additional space.
+<pre>
+> int[][] board = {{1,3,5,7},{},{},{9,11,13},{15,17},{}}
+> HW2.insert(18, board)
+> board
+{ { 1, 3, 5, 7 }, {  }, {  }, { 9, 11, 13 }, { 15, 17 }, {  } }
+> HW2.insert(4, board)
+> board
+{ { 1, 3, 4, 5 }, {  }, {  }, { 7, 9, 11 }, { 13, 15 }, {  } }
+</pre>
+</p></li>
+
+</ol></p>
+
+<hr>
+
+<h3>V. Submitting Your Project</h3>
+<p>Submit the <tt>.java</tt> file (not the <tt>.class</tt> files or the <tt>.java~</tt> files) 
+of your class plus the testing report on Canvas.</p>
+
+</body>
+
+</html>
+
+
+
+
+
+
+</ol></p>
+
+</body>
+
+</html>

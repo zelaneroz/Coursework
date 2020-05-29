@@ -1,0 +1,62 @@
+Restricting Generic Types and Wildcards:
+
+  Suppose we have the following method:
+
+	public static void displayFrames(LinkedList<JFrame> frameList) {
+ 	  for (JFrame frame : frameList)
+	    frame.setVisible(true);
+	}
+
+  This will only work on LinkedLists that have the generic type set to JFrame.
+  What if we want to restrict the generic?
+	LinkedList<GeometricFrame> list2 = new LinkedList<GeometricFrame>();
+	list2.addToFront(new GeometricFrame());
+	list2.addToFront(new GeometricFrame());
+
+      However, if we call displayFrames(list2) we get a compile error because you can't convert LinkedList<GeometricFrame> to LinkedList<JFrame>.
+  
+  Our solution is to restrict the generic type of LinkedList to be anything that is JFrame or narrower.
+
+	E extends JFrame	: When you declare generic type E, you restrict E to be JFrame or narrower
+	? extends JFrame	: When you use the "don't care" wildcard, you say the generic type must be JFrame or narrower
+	? super JFrame		: When you use the "don't care" wildcard, you say the generic type must be JFrame or wider
+
+     You can also extend generics:
+	E extends T
+	? extends T
+	? super T
+
+  Here are the two ways to write displayFrames.  First, declaring a generic restricted to JFrame or narrower:
+
+	public static <E extends JFrame> void displayFrames(LinkedList<E> frameList) {
+ 	  for (JFrame frame : frameList)
+	    frame.setVisible(true);
+	}
+
+  Or using the "Don't care" wild card:
+
+	public static void displayFrames(LinkedList<? extends JFrame> frameList) {
+ 	  for (JFrame frame : frameList)
+	    frame.setVisible(true);
+	}
+
+  In both cases we declare frame to be type JFrame.  We know whatever is stored in frameList is JFrame or narrower.
+
+
+
+The Comparable Interface
+  - one of the two most used interfaces in Java (along with Iterable)
+  - indicates that instances of the type can be ordered
+
+  The Comparable interface takes a generic type that indicates the type this object will be compared to.
+  The Comparable interface requires a compareTo method that takes a parameter of the generic type.
+    It should return < 0 if this object comes before the parameter in the default ordering of the type.
+    It should return > 0 if this object comes after the parameter in the default ordering of the type.
+    It should return = 0 if the two objects are equivalent in the default ordering of the type.
+
+
+Using Comparable objects.
+  Where we would like to write "if (e1 < e2)" we instead write
+	if (e1.compareTo(e2) < 0)
+  Note that the < operator is the same, we just moved its location.  This is the reason the return value for the compareTo is specified the way it is. 
+

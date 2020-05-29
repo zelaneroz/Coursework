@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+     "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+<title>EECS 132: Homework Assignment 1</title>
+</head>
+
+<body>
+<h2>Programming Project 1</h2>
+<h3>Due Friday, February 21 at 11:59pm</h3>
+
+
+<p><em><strong>IMPORTANT:</strong> Read the 
+<strong>Do's and Dont's</strong>
+in the <strong>Course Honor Policy</strong> found on the Canvas Pages. </em>
+</p>
+
+<h3>I. Overview</h3>
+
+<p>For this programming project, we pretend that you have been asked by Cleveland Water, Gas, and Electric to help develop a 
+system to handle the various utilities they provide to customers.
+In a "real world" application, code such as this would be tied to a database.  Here, we will just
+focus on the processing that is required to keep track of utility usage and billing information plus a date to keep track of time.
+</p>
+<p>
+The real purpose of the assignment is to give you practice writing classes, fields, methods, conditional statements, and
+constructors.  You will also be introduced to polymorphism.</p>
+<p><strong>NOTE:</strong>  There are utility terms used in this assignment.  You <em>do not</em> have to understand
+the meaning of the terms.  The project instructions will tell you where to set a value and where to use a value so that
+you can code this assignment without knowing anything about insurance.
+This is a fairly common situation in the real world.  A <em>software engineer</em> will
+work to understand the customer's needs, and design the instructions (or <em>project specificatons</em>) so the
+software developers can write the program without necessarily understanding everything about the business the program
+is for.</p>
+
+<hr>
+
+<h3>II. Code Readability (20% of your project grade)</h3>
+
+<p>Once upon a time, getting a program to work was the only goal of programming.  That was
+before computers took over the world.  Now, with highly complex software running much of our lives,
+the industry has learned that computer code is a written document that must be able to communicate
+to other humans what the code is doing.  If the program is too hard for a human to quickly understand,
+the industry does not want it.</p> 
+
+<p>Most companies enforce readable code by having very strict rules about how the program should look.
+This class will do the same, but will not be quite as strict so you can have some freedom for developing
+your own style.</p>
+
+<p><strong>To receive the full readability marks, your code must follow the following guideline:</strong>
+<ul>
+<li>All variables (fields, parameters, local variables) must be given appropriate and descriptive names.</li>
+<li>All variable and method names must start with a lowercase letter.  All class names must start with an uppercase letter.</li>
+<li>The class body should be organized so that all the fields are at the top of the file, the 
+constructors are next, and then the rest of the methods.</li>
+<li>Every statement of the program should be on it's own line and not sharing a line with another statement.</li>
+<li>All code must be properly indented (see Appendix F of the Lewis book for an example of good style).
+    The amount of indentation is up to you, but it should be at least 2 spaces, and it must be used
+    consistently throughout the code.</li>
+<li>You must be consistent in your use of {, }.  The closing } must be on its own line and indented
+the same amount as the line containing the opening {.</li>
+<li>There must be an empty line between each method.</li>
+<li>There must be a space separating each operator from its operands as well as a space after each comma.</li>
+<li>There must be a comment at the top of the file that includes both your name and a description of what the class represents.</li>
+<li>There must be a comment directly above each method that, in one or two lines, states <em>what</em>
+task the method is doing, not how it is doing it.  Do not directly copy the homework instructions.</li>
+<li>There must be a comment directly above each field that, in one line, states what the field is storing.</li>
+<li>There must be a comment either above or to the right of each non-field variable indicating what the variable is storing.  Any comments placed to the right should be aligned so they start on the same column.</li>
+</ul>
+</p>
+
+<hr>
+
+<h3>III. Program Testing Document (20% of your project grade)</h3>
+
+<p>Once upon a time, companies thought errors in code were only a minor inconvenience.
+That was before software glitches started killing people and destroying companies.
+Now, standard practice is that all code must be thoroughly verified before a company is willing to release it.
+At a large number of firms, programmers are required to <em>first</em> design the test cases the 
+program must pass and <em>then</em> start writing the code.  We will not be that strict in this 
+class, but you will need to test your code.</p>
+
+<p><strong>To receive full testing marks, you must write a testing report that shows that you thoroughly
+tested every method of the program.</strong>  The report should be a short English description for each
+test (what you are testing and what the expected result of the test is) followed by the 
+actual result of the test.  If you are using DrJava, you can enter the test into the interactions pane
+and then copy and paste the test code plus the result to your report.  If you fail to complete
+the program, your report should indicate how you would go about testing the incomplete methods.</p>
+
+<p><strong>Your grade on the testing report is how thoroughly you test your code, not how correctly
+your code runs.</strong>  If your code is not 100% correct then your report <em>should</em> show
+an incorrect result to some test.  Testing methods that do not have conditional statements should
+be pretty straightforward, but you need to put thought into testing methods with conditional
+statements so that each branch of the if-statement is tested.</p>
+
+<p><em>Hint 1</em>: You can test multiple methods with one test.  For example, you can test 
+each setter/getter method pair together or you can test constructors and getter methods together.</p>
+
+<p><strong><em>Hint 2: Do not put off testing to the end!</em></strong>  Test each method after you complete it.
+Many methods depend on other methods.  Delaying testing could mean cascading errors that cause your
+whole project to collapse.  Since you need to test anyway, copy the tests you do into a document, and
+you are most of the way to completing your report.</p>
+
+<p>If you are not using DrJava, you are allowed (but not required) create a separate class that tests your program.
+You must still write a testing report that documents the tests you do in this class.  Do not
+place testing code into a main method of the classes below.  That is not the purpose
+of a main method.</p>
+
+<hr>
+
+<h3>IV. Java Programming (60% of your grade)</h3>
+
+<p><strong>Guidelines for the program</strong>:
+<ul>
+<li>Unless specifically indicated, the listed methods must be public instance methods.</li>
+<li>You will need to create several instance fields to store data, and every field must be private.</li>
+<li>All fields must be initialized to an appropriate value.  They can be initialized either as part
+if the field declaration or in the constructor.  Even if you feel that the default value provided by Java
+is appropriate, you still must give an explicit initialization.</li>
+<li>Unless specifically stated otherwise, a  method whose name begins with <tt>set</tt> should only be assign values to appropriately
+named fields.  The method should do no other processing.  Any processing described in a <tt>set</tt>
+method description below is for information only.  That actual processing will be done by other methods.
+</li>
+<li>Unless specifically stated otherwise, any method whose name begins with <tt>get</tt> or <tt>is</tt> should only return the appropriate value.
+No other processing should occur in these methods.</li>
+<li>Your class must include only the methods listed.  You may not write any other methods.</li>
+<li>The behavior of your methods must match the descriptions below.</li>
+<li>You should not write any loops in your program (though loops are allowed in the testing code).  You should not
+use arrays.</li>
+</ul>
+</p>
+
+<h4>Assignment grading</h4>
+
+<p>There are a <em>lot</em> of methods posted here.  Most are rather short.  The purpose of this assignment is to get you <em>very</em>
+used to writing methods and if statements to the point that it becomes almost automatic.  The grading rubric will be posted shortly,
+but as a rough guide, to get a C on this project, you should have a working Date class that is tested and written with good style.
+To get a B you should have both the Date and Utility classes mostly correct, tested and written in good style.
+For an A you should include both the GasUtility and WaterUtility classes, (working, tested, and written in a good style), and for
+a high A, you should have all five classes working, tested and written with good style.</p>
+
+<h4>Create the following classes:</h4>
+
+<ol>
+<li><p>The Date class.  The Date class represents a date.  The class should have the following methods:
+<ol type="a">
+<li><p><tt>getYear</tt>: takes no input and returns a <tt>int</tt>.  Returns the year of the date.</p></li>
+<li><p><tt>setYear</tt>: takes an <tt>int</tt> as input and returns nothing.  Changes the year of the date.</p</li>
+<li><p><tt>getMonth</tt>: takes no input and returns an <tt>int</tt>.  Returns the month of the date.  The month is a number between 1 and 12.</p></li>
+<li><p><tt>setMonth</tt>: takes an <tt>int</tt> as input and returns nothing.  Sets the month of the date.
+If the input value is not in the range 1 to 12, the month should be set as 1.</p></li>
+<li><p><tt>getDay</tt>: takes no input and returns an <tt>int</tt>.  Returns the day of the date.  The day is a number between 1 and 31.</p></li>
+<li><p><tt>setDay</tt>: takes an <tt>int</tt> as input and returns nothing.  Sets the day of the date.
+If the input value is not in the range 1 up to the maximum days of the month, the day should be set as 1.</p></li>
+<li><p><tt>isLeapYear</tt>: a class method that takes an <tt>int</tt> as input and returns a <tt>boolean</tt>.
+The method returns <tt>true</tt> if the input value is a leap year.  A leap year is any year that is divisible by 4, except that it is not divisible by 100.  However, if the year is divisible by 400, then it is a leap year.</p></li>
+<li><p><tt>daysPerMonth</tt>: a class method that takes two <tt>int</tt>s as input and returns an <tt>int</tt>.
+The first input is the month and the second is the year.  It returns the maximum number of days in that month in that year.</p></li>
+<li><p><tt>sameEffectiveDayAs</tt>: takes a <tt>Date</tt> as input and returns a <tt>boolean</tt>.  It should return true of the
+input <tt>Date</tt>'s day is the same as <em>this</em> <tt>Date</tt>'s day.  However, if the input <tt>Date</tt>'s day is larger than
+<em>this</em> <tt>Date</tt>'s day and <em>this</em> <tt>Date</tt>'s day is the last day of the month, the method should also return <tt>true</tt>.  The method returns <tt>false</tt> otherwise.</p></li>
+<li><p><tt>incrementeDate</tt>: takes nothing as input and returns nothing.  Sets <em>this</em> <tt>Date</tt> to be the next day.</p></li>
+</ol>
+The Date class should change the behavior of the following methods it inherits:
+<ol type="a">
+<li><p><tt>equals</tt>: Two dates are considered equal if they have the same day and the same month.</p></li>
+<li><p><tt>toString</tt>: The string returned should be of the form <tt>"February 14, 2020"</tt>.</p></li>
+</ol>
+The Date class should have one constructor:
+<ol type="a">
+<li><p>
+The constructor takes three <tt>int</tt> values as input: a day, month, and a year, and it sets the date appropriately.
+If the day month entered is less than 1, set the month to be 1.  If the month entered is greater than 12, set the month to be 12.
+If the day entered is less than 1, set the day to be 1.  If the day entered is greater than the maximum number of days in the month, 
+set the day to be the last day of the month.
+</p></li>
+</ol>
+</li>
+
+<li><p>The Utility class.  The Utility class represents a utility account
+The class should have the following methods:
+<ol type="a">
+<li><p><tt>getUtilityRate</tt>: takes no input and returns a <tt>double</tt>.  Returns the <em>utility rate</em> that the utility charges.</p></li>
+<li><p><tt>setUtilityRate</tt>: takes a <tt>double</tt> as input and returns nothing.  Sets the <em>utility rate</em> that the utility charges.</p></li>
+<li><p><tt>getMonthUsage</tt>: takes no input and returns an <tt>int</tt>.  Returns the amount of the utility that is used this month.</p></li>
+<li><p><tt>setMonthUsage</tt>: takes an <tt>int</tt> as input and returns nothing.  Sets the amount of the utility that was used this month.</p></li>
+<li><p><tt>getYearUsage</tt>: takes no input and returns an <tt>int</tt>.  Returns the amount of the utility that was used so far this year.</p></li>
+<li><p><tt>updateYearUsage</tt>: takes an <tt>int</tt> as input and returns nothing.  Increases the amount of the utility used so far this year by the input amount.</p></li>
+<li><p><tt>getMonthBill</tt>: takes no input and returns a <tt>double</tt>.  Returns the amount billed this month.</p></li>
+<li><p><tt>setMonthBill</tt>: takes a <tt>double</tt> as input and returns nothing.  Sets the bill for the month to the input amount.</p></li>
+<li><p><tt>getBalance</tt>: takes no input and returns a <tt>double</tt>.  Returns the balance on the account.</p></li>
+<li><p><tt>updateBalance</tt>: takes a <tt>double</tt> as input and returns nothing.  Increases the balance by the amount input.</p></li>
+<li><p><tt>getAmountPaidThisMonth</tt>: takes no input and returns a <tt>double</tt>.  Returns the amount paid so far this month.</p></li>
+<li><p><tt>updateAmountPaidThisMonth</tt>: takes a <tt>double</tt> as input and returns nothing.  Increases the amount paid so far this month by the input amount.</p></li>
+<li><p><tt>getAmountDelinquent</tt>: takes no input and returns a <tt>double</tt>.  Returns the amount this account is delinquent.</p></li>
+<li><p><tt>setAmountDelinquent</tt>: takes a <tt>double</tt> as input and returns nothing.  Sets the amount this account is delinquent.</p></li>
+<li><p><tt>makePayment</tt>: takes a <tt>double</tt> as input.  Decreases the balance by the input amount and increases the amount paid so far this month by the input amount.</p></li>
+<li><p><tt>getAniversaryDate</tt>: takes no input and returns a <tt>Date</tt>. Returns the aniversary date for the account.</p></li>
+<li><p><tt>setAniversaryDate</tt>: takes a <tt>Date</tt> as input and returns nothing.  Changes the aniversary date to the input date,
+but does not change the date if the input date is February 29.</p></li>
+<li><p><tt>getSalesTaxRate</tt>: a class method that takes no input and returns a <tt>double</tt>.  Returns the sales tax rate.  Every utility instance will use the same sales tax rate.</p></li>
+<li><p><tt>setSalesTaxRate</tt>: a class method that take a <tt>double</tt> as input and returns nothing.  Changes the sales tax rate for every utility instance.</p></li>
+<li><p><tt>getInterestRate</tt>: a class method that takes no input and returns a <tt>double</tt>.  Returns the interest rate.  Every utility instance will use the same interest rate.</p></li>
+<li><p><tt>setInterestRate</tt>: a class method that take a <tt>double</tt> as input and returns nothing.  Changes the interest rate for every utility instance.</p></li>
+<li><p><tt>getMonthlyCharge</tt>: takes no input and returns a <tt>double</tt> that is the <em>month usage</em> times the <em>rate</em>.</p></li>
+<li><p><tt>endOfMonthProcessing</tt>: takes no input and returns nothing.  The method does the following:
+<ol><li>Adds the monthly charge to the balance.</li>
+    <li>Adds the sales tax times the monthly charge to the balance.</li>
+    <li>If the amount paid this month is less than the month bill, adds the difference between the month bill and the amount paid this month to the <em>delinquent</em> amount. </li>
+    <li>If the amount paid this month is greater than the month bill, subtracts the difference between the amount paid this month and the month bill from the <em>delinquent</em> amount.</li>
+    <li>If the <em>delinquent</em> amount is positive, multiply the <em>delinquent</em> amount by the <em>interest rate</em> and add that value to both the <em>delinquent</em> amount and the balance.</li>
+    <li>Sets the month bill to the current balance.</li>
+    <li>Sets the amount paid this month to 0.</li>
+</ol>
+</p></li>
+<li><p><tt>endOfYearProcessing</tt>: takes no input and returns nothing.  The method sets the year usage to 0.</p></li>
+</li>
+</ol>
+The Utility class should have one constructor
+<ol type="a">
+<li><p>
+The constructor takes a <tt>double</tt> (the utility rate) and a <tt>Date</tt> (the aniversary date) as input and sets the fields of the utility appropriately.  If the <tt>Date</tt> entered is February 29, the aniversary date should be February 28 instead.</p></li>
+</ol>
+</p></li>
+
+<li><p>The WaterUtility class should extend the Utility class.  The WaterUtility class should have everything the Utility class has
+including the methods:
+<ol type="a">
+<li><p><tt>getNumBaths</tt>: takes no input and returns an <tt>int</tt>.  Returns the number of bathrooms for this account.</p></li>
+<li><p><tt>setNumBaths</tt>: takes an <tt>int</tt> as input and returns nothing.  Sets the number of bathrooms for this account.</p></li>
+<li><p><tt>getBathFee</tt>: takes no input and returns a <tt>double</tt>.  Returns the fee per bath for this account.</p></li>
+<li><p><tt>setBathFee</tt>: takes a <tt>double</tt> as input and returns nothing.  Sets the fee per bath for this account.</p></li>
+</ol>
+The WaterUtility class should change the behavior of the following method:
+<ol type="a">
+<li><p><tt>getMonthlyCharge</tt>: does the same as the method of Utility, except that it also adds in the product of the <em>number of baths</em> and the <em>bath fee</em>.</p></li>
+</ol>
+The WaterUtility class should have a constructor:
+<ol type="a">
+<li><p>Takes a <tt>double</tt> (the utility rate), a <tt>Date</tt> (the aniversary date), a <tt>int</tt> (the number of baths), and a <tt>double</tt> (the bath fee) as input and sets the fields appropriately.
+If the <tt>Date</tt> entered is February 29, the aniversary date should be February 28 instead.</p></li>
+</ol>
+</li>
+
+<li><p>The GasUtility class should extend the Utility class.  The GasUtility class should have everything the Utility class
+has including the methods:
+<ol type="a">
+<li><p><tt>isInstallmentPlan</tt>: takes no input and returns a <tt>boolean</tt>.  Returns whether this utility is using an installment plan.</p></li>
+<li><p><tt>setInstallmentPlan</tt>: takes a <tt>boolean</tt> as input and returns nothing.  Sets whether this utility is using an installment plan.</p></li>
+</ol>
+The GasUtility class should have a different behavior than the Utility class has for the following methods:
+<ol type="a">
+<li><p><tt>endOfYearProcessing</tt>: takes no input and returns nothing. Sets the <em>installment amount</em> to be the <em>year usage</em> divided by 12.  Then sets the <em>year usage</em> to 0.</p></li>
+<li><p><tt>getMonthlyCharge</tt>: takes a <tt>boolean</tt> as input and returns a <tt>double</tt>.  If the input is <tt>true</tt>, it returns the <em>installment amount</em>, and if the input is <tt>false</tt> it returns the same as the <tt>getMonthlyCharge</tt> method with no input as described in Utility above.</p></li>
+<li><p><tt>endOfMonthProcessing</tt>: takes no input and returns nothing.  The method does the same as the method for Utility except that if the account is on the installment plan, the month bill should be set to the <em>installment amount</em> times the sales tax plus the <em>delinquent amount</em>.</p></li>
+</ol>
+The GasUtility class should have one constructor:
+<ol type="a">
+The constructor takes a <tt>double</tt> (the utility rate) and a <tt>Date</tt> (the aniversary date) as input and sets the fields appropriately.
+If the <tt>Date</tt> entered is February 29, the aniversary date should be February 28 instead.</p></li>
+</ol>
+</p></li>
+
+<li><p>The Customer class represents a customer.  The customer class has the following methods:
+<ol type="a">
+<li><p><tt>getElectricUtility</tt>: takes no input and returns a <tt>Utility</tt> that is the electric utility.  The method returns <tt>null</tt> if the customer has no electric utility.</p></li>
+<li><p><tt>setElectricUtility</tt>: takes a <tt>Utility</tt> as input and returns nothing.  Sets the electric utility for the customer.</p></tt>
+<li><p><tt>getWaterUtility</tt>: takes no input and returns a <tt>WaterUtility</tt> that is the water utility.  The method returns <tt>null</tt> if the customer has no water utility.</p></li>
+<li><p><tt>setWaterUtility</tt>: takes a <tt>WaterUtility</tt> as input and returns nothing.  Sets the water utility for the customer.</p></tt>
+<li><p><tt>getGasUtility</tt>: takes no input and returns a <tt>GasUtility</tt> that is the gas utility.  The method returns <tt>null</tt> if the customer has no gas utility.</p></li>
+<li><p><tt>setGasUtility</tt>: takes a <tt>GasUtility</tt> as input and returns nothing.  Sets the gas utility for the customer.</p></tt>
+<li><p><tt>getDate</tt>: takes no input and returns a <tt>Date</tt> that is the current date for this customer.</li>
+<li><p><tt>setDate</tt>: takes a <tt>Date</tt> as input and returns nothing.</li>
+<li><p><tt>incrementDate</tt>: increments the current date for the customer.  If the new date is the <em>same effective day</em>
+as any of the utilities' <em>aniversary date</em>, then it calls that utility's <tt>endOfMonthProcessing</tt> method.  If the new date is <em>equal to</em>
+any of the utilities' <em>aniversary date</em>, then the method calls that utility's <tt>endOfYearProcessing</tt> method.</p></li>
+</ol>
+The Customer class should have two constructors.
+<ol type="a">
+<li><p>One constructor takes a <tt>Date</tt> as input that is the customer's current date.</p></li>
+<li><p>The other constructor takes a <tt>Date</tt>, a <tt>Utility</tt>, a <tt>WaterUtility</tt>, and a <tt>GasUtility</tt> as input that are the customer's current date, electric utility, water utility, and gas utility, respectively.</p></li>
+</ol>
+</p></li></ol>
+
+
+
+<hr>
+
+<h3>V. Submitting Your Project</h3>
+<p>Submit the <tt>.java</tt> files (not the <tt>.class</tt> files or the <tt>.java~</tt> files) for each
+of your classes plus the testing report on Canvas.</p>
+
+</body>
+</html>

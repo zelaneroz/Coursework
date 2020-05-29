@@ -1,0 +1,147 @@
+The difference between types and instances:
+
+  Important: beginning programmers often struggle with the difference between a type and an instance of the type.
+   For example, if the type is Movie, instances of the type are "Toy Story", "Star Wars: The Last Jedi" (not the name, but the actual movie with all its data)
+     Each instance refers to a specific, separate movie while the type Movie refers to the entire concept of what a film is.
+
+    Ex:   type       |   instance of the type
+          -----------+------------------------
+          int        |   -3, 5, 100
+          JFrame     |   all the windows on your desktop
+          Movie      |   "Toy Story 4", "Black Panther"
+
+  A class instance is called an "object" in Java.
+
+Java Programming:
+
+  1. A simple Java statement ends with a ;
+  2. A compound Java statement is bracketed by { } and contains 0 or more statements (simple or compound).
+  3. All Java programming consists of writing compound/reference types.
+     The basic reference type is the class.
+
+  A class definition consists of a header followed by a compound statement.
+
+	public class MyFirstClass extends Object {
+	}
+
+The part the starts with "public" is called the "class header".  
+The part between the { } is called the "class body". 
+The class body is by definition a compound statement, and all elements of the class (fields, method, other compound types) go in the body (between the { }).
+
+The parts are:
+   public:  the access modifier
+   class:   this is a class
+   MyFirstClass: the name of the class (a name can be almost anything, but professional Java style is to always start with a capital letter)
+   extends Object:  indicates the super class of this class.  Every class has exactly 1 super class (also called the "parent" class).
+
+The access modifier determines where the code can be directly accessed.  (This is not a security feature.  All code can still be indirectly accessed.)
+The access modifier can be any of the four:
+ 	public:  the code can be used/accessed anywhere in the program
+ 	protected:  the code can be used in this type and in any type that extends this type (or in any type in the same folder as this type)
+ 	private: the code can only be used in the body of this type
+
+	If you omit the access modifier, the default is "package": the code can be used in any type that is in the same package (i.e. in the same folder) as the containing type.
+
+What can go in a class body?
+  - field declarations (these can include assignment operators)
+  - methods
+  - other non-primitive type definitions (these are called inner types or nested types)
+  - (a couple other things we will mention later)
+ 
+  4. Each public class must go in its own file.  The file name must be the same as the class name, and the file extension must be .java.  
+     The class must be compiled before you use it.  The compiler creates a file with the same name but .class extension that contains the Java bytecode for the class.
+
+  5. What's the point of a super class?
+     - Every class "inherits" all public and protected instance methods of the super class.
+     - Every class has access to all public and protected fields and nested types of the super class (plus the few other things we can put in a class).
+    (More about this later.)
+
+
+Fields:
+  There are two kinds of fields. Instance fields are memory that is allocated inside each instance.  We will focus on that for now.
+
+  To create an instance field is the same as declaring a variable except you add an access modifier:
+	access-modifier type name 
+
+    public class MyFirstClass extends Object {
+
+        private int myInstanceField;
+
+    }
+
+
+  To access the instance field:
+	MyFirstClass c = new MyFirstClass();
+        c.myInstanceField       <-  this will give the value stored in the field MyInstanceField (but it may give an error because we made the field private!)
+
+Methods:
+   An instance method definition is a method header followed by a compound statement.
+
+	access-modifier return-type name(input parameters) {
+        }
+
+ - here is an example that takes two inputs of type int and returns a value of type int
+
+	public int average(int input1, int input2) {
+
+ - the input parameters are a sequence of 0 or more variable declarations separated by commas.  There is one variable declaration for each input your method will take.
+
+ - the return type can be any type, or if the method will not return a value, it is "void".
+
+ - the part starting with the access modifier is called the "method header"
+ - the part between the { } is called the "method body".
+ - all code describing the behavior of the method goes in the body.  The body is by definition a compound statement.
+    
+	public class MyFirstClass extends Object {
+
+	  public int average(int input1, int input2) {
+	    int sum = input1 + input 2;
+	    int avg = sum / 2;
+ 	    return sum;
+	  }
+
+	}
+
+	A return statement must be included in any method that has a non-void return type.  The return statement gives the output of the method.
+
+        Note that we can shorten the code.  One hint is that if, after declaring and assigning a variable, you only use the variable
+         once, then you do not need the variable.  Instead, replace the variable with the value you assigned it:
+        The variable sum is only used once in this code so:
+		int sum = input1 + input2;
+                int avg = sum / 2;
+        can become:
+		int avg = (input1 + input2) / 2;
+	Likewise, the variable avg is only used once.  The method now becomes:
+
+	    public int average(int input1, int input2) {
+	      return (input1 + input2) / 2;
+	    }
+
+Now we can use this method:
+	> MyFirstClass c = new MyFirstClass();
+	> c.average(300,500)
+        > 400
+When you call the method, Java assigns the first value to the first variable of the input parameters and the second value to the second variable.
+   All type rules apply!  So we have to use two values that are type int (or whose type Java will automatically convert to int).
+   We also have to give two values as input.
+	> c.average(300)
+		Error no method with input (int), only (int, int)
+	> c.average(10.0, 12.0)
+		Error no method with input (double, double), only (int, int)
+
+
+What is the point of the super class?  Your class inherits all the public and protected instance methods of the super class:
+
+	public class MyFirstFrame extends JFrame {
+	}
+
+   -> Now MyFirstFrame inherits all the methods of JFrame, and so we can use them:
+
+	MyFirstFrame f = new MyFirstFrame();
+	f.setVisible(true);
+	f.setSize(300,500);
+	
+      and so on.
+
+   Why extend JFrame when we already have JFrame?
+     We are creating a brand new type so that we can add new features to the existing JFrame type.

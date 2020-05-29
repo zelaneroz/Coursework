@@ -1,0 +1,106 @@
+Arrays and Loops - two examples from lab
+
+Here are two examples from the lab they just did.  Most students will have completed the first example, and some students
+will have completed the second.
+
+ 1. The first example is removing an element from an array. 
+  /**
+   * Remove k from list[0..n-1].
+   * Precondition: list[0..n-1] is sorted, and k is an element of list[0..n-1].
+   * Postcondition: list[0..n-2] is sorted.
+   * @param list the sorted array.
+   * @param n the number of items in list.
+   * @param k the number to remove from list.
+   */
+  public static void remove(int[] list, int n, int k) {
+
+   An obvious, but not optimal, algorithm:
+   I usually ask the students to state how they solved it.  Almost everyone has something similar to this algorithm:
+
+	Have a boolean variable indicate whether we have located k.
+	Create a single loop from 0 to n. 
+	  If we find k, set the indicator variable to true.
+	  If the indicator variable is true and this is not the last index, shift the next element down to this element.
+
+   This loop idea will work fine.  However, it is more complicated than needed and will run slightly slower than needed.
+
+Key Idea 1:  Each loop you write should have one task.  This solution has a loop doing two tasks, and it needs an if statement
+  to determine which task it is doing
+    The problem is that the loop does two tasks.  We need if statements to check for which task we are doing, and we need a special
+
+  We can make the code much simpler by breaking the loop into two.  Each loop does one task.  The first loop finds k.
+   The second loop shifts everything after k down one index.
+
+  When do we stop the first loop?  When either we find the element we are looking for or we get to the end of the array,
+    so place all of this criteria into the loop condition so we can easily see what the loop is doing.
+
+  /**
+   * Remove k from list[0..n-1].
+   * Precondition: list[0..n-1] is sorted, and k is an element of list[0..n-1].
+   * Postcondition: list[0..n-2] is sorted.
+   * @param list the sorted array.
+   * @param n the number of items in list.
+   * @param k the number to remove from list.
+   */
+  public static void remove(int[] list, int n, int k) {
+    int i;
+
+    // step 1: find index of k
+    for (i = 0; i < n && k != list[i]; i = i + 1)
+      ;
+          // <- at this point, k = list[i] (or i == n if k is not in the list)
+
+    // step 2: remove k and slide the rest of the entries down
+    while (i < n - 1) {
+      list[i] = list[i + 1];
+      i = i + 1;
+    }
+  }
+
+ 2. The second example is adding an element to the array.  
+  /**
+   * Add k to list[0..n-1].
+   * Precondition: list[0..n-1] is sorted and list[n] is unused.
+   * Postcondition: list[0..n] is sorted, and list contains k.
+   * @param list the sorted array.
+   * @param n the number of items in list.
+   * @param k the number to add to list.
+   */
+  public static void insert(int[] list, int n, int k) {
+
+    As before, I ask the students who solved it how they did it.  Most have something like the following.
+
+    An obvious, but not optimal, algorithm:
+	Have a loop that runs through until we find an index with list[index] <= k <= list[index + 1]
+	Now shift everything up by using a saved value that starts at k.  Repeat: save the value at index + 1, place the previously saved value into index + 1, increment the index.
+
+
+    The students may have done this as one loop, and some may have realized it is better to write it as two loops, one to find
+     the element, and one to shift the values up.
+
+    However, this sliding is complex and requires extra memory and is a little complex to write.
+
+    A better solution:  Think about the problem in reverse, starting from the back.
+      Our first loop will do the sliding starting from the back:
+
+    // Start from back, slide each element to the right, and stop when we get to the spot where k goes
+    for (i = n; i > 0 && k < list[i - 1]; i = i - 1) {
+      list[i - 1] = list[i];
+    }
+        // <- at this point, we have k >= list[i-1] OR i == 0
+
+   Now, where did we stop?  We stopped right where we need to insert the k!  A second loop is not needed.  We can do the second
+    task in one step:
+
+    list[i] = k;
+  }
+
+Morals of the Lecture:
+  1) Break a problem up into smaller tasks.  Use a separate loop for each task.
+  2) Place all stopping criteria in the condition of the loop.
+  3) Sometimes, working in "reverse" leads to simpler code.  Always think about the problem in both directions.
+  In each case, we ended up with simpler loops that were easier to code, and our programs will run faster because there are fewer steps inside each loop.
+
+
+  
+

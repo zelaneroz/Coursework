@@ -1,0 +1,156 @@
+Java Reference/Compound Types
+  What we have learned so far:
+    Everything stored in a computers is just a number in binary.
+    All data in a programming language have a type associated with it: the type is what the programmer declares that the data represents.
+    Java is strictly typed: all expressions that produce values have types, and Java verifies that each type is used correctly.
+
+  There are two kinds of types in Java:
+    1) primitive types (int, double, char, boolean, etc) - these are all pre-defined
+    2) compound types (called reference types in your book) - these are both pre-defined and created by the programmer
+
+  Types are set explicitly or implicitly.
+    Explicitly setting the type is through using a value that is a specific type (3 is int, 3.0 is double, '3' is char), 
+      or by using a typecast (int)3.5 is explicitly setting the type to int
+
+    Implicitly setting the type is by using a primitive operator such as +, -, *, /, %.  These operators have their own type rules and set the type of their result.
+
+
+Compound types:
+  The basic compound type is called a "class".  A class consists of
+    1) variables of any type (Java calls variables inside of classes "fields")
+    2) functions that take 0 or more input, possibly performs some action, and returns 0 or 1 value (Java calls these functions "methods")
+    3) other reference/compound types
+  There are a couple other kinds of reference/compound types that will be covered later.
+
+  We will now give examples of 2 pre-defined classes:
+     Math:    a collection of mathematical functions and constants
+     JFrame:  represents a window on your computer screen
+
+
+  Operators for compound/reference types.
+    Here are all the operators you can do on a compound/reference type.  The first are the same as for primitive values: 
+      1) The equality operators:  ==, !=
+      2) The assignment operator:  =
+
+    The others are only for compound/reference types
+      3) new          (used to create an instance/value of a type)
+      4) .            (used to access the fields, methods, or nested types of the class)
+      5) instanceof   (used to test what type a value is)
+
+Using Classes:
+  1) To create an instance of a class, use the new operator
+	new desired-type(0 or more input values)
+
+	new JFrame()    -> this results in a value of type JFrame
+			-> note that to use JFrame, you must "import" the package.  See the note on Java packages below.
+
+    The new operator does the following:
+	1. Allocate space in memory for the type instance.
+	2. Initializes the instance using the input data (it does this by calling a special method/function, called a constructor, whose sole purpose is initializing instances)
+	3. Returns the location in memory of the instance.  This location is called the "reference" of the instance.
+
+     So, when we have
+	new JFrame()
+      Java first allocates enough space in memory for the JFrame instance, calls the constructor method with no input, and then returns the location of the instance.
+
+			VERY IMPORTANT POINT:  	For primitive types, the value of the type is the binary representation of the value.
+			       			For reference types, the value of the type is the location of the instance in memory.
+
+     Note that every time we call 
+	new JFrame()
+     we are creating a brand new instance of a JFrame. If we want to reuse the same instance, we need to remember it.  What is the only way to remember anything in Java?  With a variable!
+
+
+    For example:
+        5 == 5    returns true because the 0/1 data used to represent 5 is identical in both operands
+        new JFrame() == new JFrame()   returns false because each new operator use creates a new instance that is stored at a different location in memory.  The values here are now two different addresses and so they are not the same.
+
+--------------------------
+Side note: Java Packages
+   All Java pre-defined compound/reference types are organized into packages.  
+   JFrame is in the package javax.swing
+   Math is in the package java.lang
+
+   You should "import" a reference type before you can use it.
+	import javax.swing.JFrame;
+
+	new JFrame()
+
+   You can import all the reference types in a package:
+	import javax.swing.*;
+
+   You do not have to import the type.  If you don't, you need to use the full name:
+
+	new javax.swing.JFrame()
+
+   Exception:  All types in the package java.lang are automatically imported.
+     As a result, you do not need to import Math to use it.
+--------------------------
+
+  Now that we can create an instance of a class, let's store the value into a variable.
+    Variables and Assignment with Reference Types:
+        The rules are EXACTLY the same as for primitive types
+	    double x       <- creates a variable called x that stores values of type double
+            JFrame frame1  <- creates a variable called window that stores values of type JFrame
+
+	    x = 5.0                    <- stores the value 5.0 in variable x.  
+	    frame1 = new JFrame()      <- stores the location of the JFrame instance in variable window. 
+
+
+     Let's look at the == example again:
+	    JFrame frame2 = new JFrame()
+	    frame1 == frame2   =>  this is false because the two variables are storing two different addresses
+ 
+	    frame1 = frame2    =>  this copies the address in frame2 into the variable frame1
+	    frame1 == frame2   =>  this is true because the two variables are now storing the exact same address
+
+	    
+To access something from inside a compound type, we use the "dot" operator. 
+
+  Calling/executing methods of a class
+
+     To call (execute) an instance method you use:
+        instance-location.method-name(0 or more inputs separated by commas)
+     For example, JFrame has a method setVisible that takes a single boolean as input.
+        To call the method on the instance whose address is stored in frame1, we use:
+		frame1.setVisible(true)
+	or
+		frame1.setVisible(false)
+
+     Note that the expression to the left of the dot must be an address.  It does not have to be a variable.
+      Any expression that gives an address of type JFrame is okay:
+	   new JFrame().setVisible(true)
+
+     For another example, JFrame has a method setSize that takes two int values as input.
+       To call the method on the instance whose address is stored in frame1:
+	   frame1.setSize(300, 500)
+
+  Accessing fields
+
+        To access an instance field, you use
+	     instance-location.field
+
+        Example: JFrame has a field (variable) of type boolean called rootPaneCheckingEnabled
+
+		JFrame window
+		boolean z = frame1.rootPaneCheckingEnabled
+		frame1.rootPaneCheckingEnabled = true
+
+You can think of the . as an "apostrophe s".  The expression frame1.rootPane in Java is asking for frame1's rootPane variable.
+
+
+One more example: the Math class
+
+	The Math class is a special pre-defined class in Java.  Unlike JFrame, we are not going to create instances of the Math class.
+          Instead, there are methods and fields that belong to the Math class directly.
+	  To access the methods and fields, we use the dot operator again, but now instead of putting an address to the left of the dot, we put the class name.
+
+	     Math.PI   =>  This is a field storing a double that is as close to the value pi as possible
+	     Math.sqrt(2.0)   => This is a method that returns the square root of the input value
+
+
+Summary:
+   A compound or reference type contains fields, methods, and other nested types.
+   The value of a compound/reference type is the address of the data rather than the data itself.  (This is why they are called reference types).
+   The basic compound/reference type is called a class.
+   The methods, fields, and nested types can either "belong" to an instance of the class (these are called "instance fields" and "instance methods"), or they can "belong" to the class itself (these are called "class fields" or "class methods").

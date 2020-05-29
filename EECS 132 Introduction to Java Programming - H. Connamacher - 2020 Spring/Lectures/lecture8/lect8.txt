@@ -1,0 +1,254 @@
+Method Overriding:
+   We can change the behavior of the setTitle method by "overriding" it.
+   A class inherits all the public and protected instance methods of the super class.
+   A class can replace an inherited method by overriding it.  We override a method by creating another method with
+    the same access modifier, return type, name, and input types and order (called the parameter signature).
+   You can only override instance methods.
+
+   If we override a method, inside the class we can still have access to the original method of the super class.
+     To access the original method, we use
+         super.methodName()
+     which acts just like this.methodName() except it is using the method of the super class.
+     You can also access fields of the super class with super.fieldName
+
+   However, to all code outside of this class, the overriding method has replaced the inherited method, and there is no way that
+     code outside of this class can access the original inherited method.
+
+
+  Our task:
+    Recall the GeometricFrame class from last lecture.  It has a method to put the size on the title:
+
+        private String originalTitle = "";
+
+        public void showSizeOnTitle(boolean show) {
+          if (show)
+            this.setTitle(this.originalTitle + " (" + this.getWidth() + "x" + this.getHeight() + ")");
+          else
+            this.setTitle(this.originalTitle);
+        }
+
+    Here originalTitle is suppose to remember the title we want on the window, but it does not currently do that.
+    The size on the title is erased if we call setTitle to change the title.
+    Also, the size on the title is not changed when the window size changes with setSize().
+
+    Our solution is to change how setSize and setTitle works by overriding them.  
+     This way, we can make them know about the dimension display on the title.
+
+    Step 1:  Override setSize:
+
+	public class setSize(int width, int height) {
+	}
+
+    Great!  We just changed our setSize method.  But now we changed it so that it does nothing!
+    We still want to change the size of the window, but we don't know how to do that. 
+    However, the setSize method of JFrame does know how to change the window size.  So, let's use it:
+
+	public class setSize(int width, int height) {
+	   super.setSize(width, height);
+	}
+
+    Now our method replaces the inherited setSize, but it still calls the inherited setSize method to change the window size.
+
+    Let's now make it correctly both change the window size and correctly update the title bar:
+
+	public class setSize(int width, int height) {
+	   super.setSize(width, height);
+	   if (the size is on the title)
+	     this.setSizeOnTitle(true);
+	   else
+	     this.setSizeOnTitle(false);
+	}
+
+     We need a way to remember whether the size is on the title.  We can do that using a field!
+     Also, notice we call setSizeOnTitle with input true if the if condition is true, and false if the condition is false.
+     So we don't actually need the if statement.
+
+        private String originalTitle = "";
+	private boolean isSizeOnTitle = false;
+
+        public void showSizeOnTitle(boolean show) {
+          if (show)
+            this.setTitle(this.originalTitle + " (" + this.getWidth() + "x" + this.getHeight() + ")");
+          else
+            this.setTitle(this.originalTitle);
+
+	  this.isSizeOnTitle = show;
+        }
+
+	public class setSize(int width, int height) {
+	   super.setSize(width, height);
+	   this.setSizeOnTitle(this.isSizeOnTitle);
+	}
+
+   Try the code for yourself. It works great.
+   Now, let's do the same thing with setTitle.  Let's override it to change its behavior to remember the title set,
+     and then to add the new title to the window with the size dimensions (if they are displayed).
+
+        public void setTitle(String title) {
+          this.originalTitle = title;                   // <- first we save the title into our field
+          this.showSizeOnTitle(this.isSizeOnTitle);     // <- if we had the size on the title before changing the title, add it back on
+        }
+
+
+   Problem!  We changed how setTitle works, but the body for showSizeOnTitle uses the inherited setTitle method!
+    Now, it is going to use the new, replaced method we created, and that causes problems.
+    We fix that by explicitly stating that showSizeOnTitle still uses the inherited setTitle of JFrame.
+	super.setTitle(....)
+   Here is the full code.
+
+        private String originalTitle = "";
+	private boolean isSizeOnTitle = false;
+
+        public void showSizeOnTitle(boolean show) {
+          if (show)
+            super.setTitle(this.originalTitle + " (" + this.getWidth() + "x" + this.getHeight() + ")");
+          else
+            super.setTitle(this.originalTitle);
+
+	  this.isSizeOnTitle = show;
+        }
+
+	public class setSize(int width, int height) {
+	   super.setSize(width, height);
+	   this.setSizeOnTitle(this.isSizeOnTitle);
+	}
+
+        public void setTitle(String title) {
+          this.originalTitle = title;                   // <- first we save the title into our field
+          this.showSizeOnTitle(this.isSizeOnTitle);     // <- if we had the size on the title before changing the title, add it back on
+        }
+
+
+
+Java Non-Primitive Type Rules
+   Let's create a Phone class to represent telephones:
+
+	public class Phone extends Object  {
+
+	   /* a method to make a call to a particular number */
+	   public void makeCall(PhoneNumber number) {
+	      /* some code goes here */
+	   }
+	}
+
+   What does the "extends Object" mean?  It says that any instance that is type Phone also is type Object.
+   The Phone class "inherits" all the public and protected instance methods of Object.
+   The Phone class "has access to" all the public and protected fields (both class and instance), class (i.e. static) methods, constructors, and nested classes of Object.
+
+	public class CellPhone extends Phone {
+
+	   /* a method to send a text */
+	   public void sendText(PhoneNumber number, String text) {
+	     /* some code goes here */
+	   }
+
+	   // <- Note that CellPhone inherits the method makeCall from Phone
+	}
+
+	public class SmartPhone extends CellPhone {
+
+	   /* a method to download an app */
+	   public void downloadApp(App app) {
+	     /* some code goes here */
+	   }
+
+	   /* a method to use an app */
+	   public void useApp(App app) {
+	     /* some code goes here */
+	   }
+
+	   // <- Note that SmartPhone inherits makeCall and sendText from CellPhone
+	}
+
+	public class iPhone extends SmartPhone {
+
+	  // <- iPhone inherits makeCall, sendText, downloadApp, and useApp from CellPhone
+
+	  // <- iPhone will change the behavior of downloadApp so that it gets the app from the AppStore
+	  // <- changing the behavior of a method is called "overriding" the method
+	}
+
+	public class AndroidPhone extends SmartPhone {
+
+	  // <- AndroidPhone inherits makeCall, sendText, downloadApp, and useApp from CellPhone
+
+	  // <- AndroidPhone will change the behavior of downloadApp so that it gets the app from the Google Play
+	  // <- changing the behavior of a method is called "overriding" the method
+	}
+
+	
+   Here is a map of the class heirarchy with a few extra classes thrown in 
+                                   Object
+                                     |
+                                    Phone (includes the method makeCall)
+                                   /    \
+                            LandLine    CellPhone (includes the method sendText)
+                                           /    \
+                                    FlipPhone   SmartPhone (includes the methods downloadApp and useApp)
+                                                 /      \
+                                            Android    iPhone (overrides the method downloadApp, includes the method faceTime)
+                                             (overrides the method downloadApp)
+
+ Java Non-Primitive Type Rules:
+    1. When you create an instance of a class:
+		new iPhone()
+	the instance is type iPhone, but it is also the type of every class it extends (all the way up to Object),
+	  so it is also type SmartPhone, CellPhone, Phone, and Object
+	It is all these types at the same time.  This is called "polymorphism" for "many types".
+
+    2. The "true type" is the type it is created as:  new iPhone() means the instance will have true type iPhone.
+	(The "true type" is called the "run-time type" in Java references or sometimes just "class".)
+       Every object knows its true type (it is stored in the object's data), and the true type does not change.
+
+    3. The "current type" is which of its polymorphic types it is typecast to.
+	Every place that value is used in the code will have a current type associated with it.
+	(The "current type" is called the "compile-time type" in Java references or sometimes just "type".)
+
+    4. You can typecast a non-primitive value to any of its valid polymorphic types.
+	(An object created with "new iPhone()" can be typecast as any of Object, Phone, CellPhone, SmartPhone, or iPhone,
+	   and no other class.)
+
+    5. A typecast that goes "up" the hierarchy (wider) is automatic, by a typecast that goes "down" the hierarchy (narrower) must be explicit.
+
+    6. The current type determines what methods you are allowed to call as well as what fields and inner classes you will access.
+         For example,
+	    CellPhone c = new iPhone();
+          The object stored in c has true type iPhone, but the current type of c is CellPhone.
+	  The typecast from iPhone to CellPhone is automatic and legal because CellPhone is wider than (up the hierarchy from) iPhone.
+	  You can only call methods valid for CellPhone on c:
+	    c.sendText(...)    is legal
+	    c.downloadApp(...)  is not.
+		= even though the object stored in c is currently a iPhone, you can't write this code because it will not work
+		  for *all* cell phones. Later in the program, c might store a FlipPhone.
+
+    7.  The true type determines the version of an instance method that is called.
+	  For example:
+	     SmartPhone p = new iPhone();
+	     p.downloadApp(...)   <- this will get the app from the AppStore
+				  <-  why?  Because the true type of the object stored in p is iPhone and the iPhone class
+					overrode the downloadApp method to use the AppStore
+	     p = new AndroidPhone();
+	     p.downloadApp(...)   <-  Same code, but now it will download from Google Play
+				  <-  why?  Even though the current type of p is SmartPhone, the object stored in p has true type
+				       AndroidPhone, and the AndroidPhone class overrode the downloadApp method to use GooglePlay.
+
+
+ Why have this hierarchy?
+    It enables us to write a method once and have it works for lots of different kinds of types.
+    We will be able to add new types of phones to our hierarchy and not have to re-write code.
+    This will be demonstrated later.
+
+
+A summary of the rules:
+  1) Every object is created as a specific type using the new operator. I call this type the "true type". 
+     The true type determines how the object will behave. It does this by determining what version of a method is run.
+     The true type never changes.
+      Ex: new MyFirstWindow() creates an instance whose true type is MyFirstWindow.   new JFrame() creates an instance whose true type is JFrame.
+
+  2) The object is not only its "true type".  It is also the type of the super class of the true type, that class's super class, and so on up to Object.  This property of being many types at the same time is called "polymorphism".
+
+  3) A typecast does not change the object.  The typecast does not change the true type of the object.  Instead, the typecast determines which of the legal polymorphic types for the object is the object acting as at this line of code.
+     I call the type that the object is acting as the "current type".  The compiler uses the current type to determine what methods you are allowed to call and what fields you can access.
+     You can only call methods and access fields that exist for that current type.
+     The specific field or class method accessed will depend on the current type, but the instance method that is used will be the version of the true type.
+

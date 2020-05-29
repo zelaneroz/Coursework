@@ -1,0 +1,229 @@
+Class Fields and Methods vs. Instance Fields and Methods
+
+  First thing we did was to review the creation of the class:
+
+	public class MyFirstClass {
+	  public int myInstanceField = 10;
+	
+ 	  public int average(int x, int y) {
+	    int value = (x + y) / 2;
+	    return value;
+	  }
+	}
+
+
+     We focused on myInstanceField.  Suppose we create two instances of MyFirstClass:
+	MyFirstClass c1 = new MyFirstClass();
+	MyFirstClass c2 = new MyFirstClass();
+
+    Each variable c1, c2 stores the address of an instance of MyFirstClass.  Since we called new twice, we have two different instances,
+	each instance is stored at a different location, and so c1 and c2 store two different addresses.
+
+    Inside each instance is a version of the myInstanceField variable.  
+       This is called an "instance" field because there is a separate variable in each MyFirstClass instance:
+
+	c1.myInstanceField = 100
+ 	c2.myInstanceField = 200
+
+	c1.myInstanceField    <-  now stores 100
+	c2.myInstanceField    <-  now stores 200
+
+     There are two different variables called myInstanceField, one inside the c1 object, and the other inside the c2 object.
+
+  Class field:
+
+     We can create a field where there is only one field/variable shared by all objects of the class.
+       To do so, we add the word "static" to the variable declaration.
+
+	public class MyFirstClass {
+	  public int myInstanceField = 10;
+	  public static int myClassField = 2;
+	
+ 	  public int average(int x, int y) {
+	    int value = (x + y) / 2;
+	    return value;
+	  }
+	}
+
+     	c1.myClassField = 2
+     	c2.myClassField = 3
+
+     	c1.myClassField    <-  now stores 3
+     	c2.myClassField    <-  now stores 3
+
+    There is only one copy of myClassField that all the instances share.  The field is not stored in the objects.
+      It is instead stored inside the class itself.
+
+    Since it is shared by all objects, we can also access it using the class name:
+
+	MyFirstClass.myClassField = 5
+
+	c1.myClassField    <-  now stores 5
+
+
+  Variables in Java:
+   There are 4 kinds of variables, and the kind you create depends on where you create it:
+        1) class (static) fields:  the variable is stored in the class (one copy that all the objects share)
+                        - class fields exist for the duration of the program.
+        2) instance (non-static) fields:  a separate variable stored in each instance of the class.  Every instance has its own version.
+                        - an instance field exists as long as the containing instance exists
+        3) method parameter: the variable(s) that store an input to the method.  It exists only in the body of the method.
+        4) local variables:  a variable declared inside a method.  It exists from the moment created until the end of the compound statement it is declared it.
+
+   If you look at the MyFirstClass example, you will see all 4 kinds of variables.
+     myClassField is a class field
+     myInstanceField is an instance field
+     x and y are both method parameters
+     value is a local variable
+
+	
+  Class methods:
+ 
+     Just as with fields, we can have "class" and "instance" methods.
+     Right now, average is an instance method so we have to create an instance to use it:
+
+	MyFirstClass c1 = new MyFirstClass();
+	c1.average(10, 5)
+
+     We can instead make it a class method with the "static" word:
+	
+	public class MyFirstClass {
+	  public int myInstanceField = 10;
+	  public static int myClassField = 2;
+	
+ 	  public static int average(int x, int y) {
+	    int value = (x + y) / 2;
+	    return value;
+	  }
+	}
+
+     So we can now call the method just using the class name:
+
+	MyFirstClass.average(10, 5)
+
+
+
+
+
+An Interesting Java Class, inherited methods, the keyword "this"
+  
+  In lecture, we built GeometricFrame, a class that adds new features to JFrame.
+
+  First, we create the class structure:
+ 
+	public class GeometricFrame extends JFrame {
+
+	}
+
+  (Remember to import something!)
+
+  Now, all the new features of that we want to add to GeometricFrame go in the class body:  between the { and }
+
+The super/parent class:
+   Every class (except one) in Java has exactly one super, or parent, class.
+   The super class is set by the "extends ..." portion of the class header.
+   If you do not write the "extends ...", then your class extends the Object class by default.
+     (Object is the only class in Java that does not have a super clsas.)
+
+   A class inherits all the public and protected instance methods of its super class.
+   A class has access to all the public and protected class methods, instance and class fields, nested classes of the super class.
+     - essentially a class has access to everything public and protected of the super class, but the instance methods are special.
+       Instance methods are inherited from the super class. 
+       You will see the difference between "access" and "inherited" in a lecture coming soon.
+
+
+  In our example, GeometricFrame's super class is JFrame.
+    That means GeometricFrame inherits all the public and protected instance methods of JFrame (plus access to the other public and protected things).
+    So the GeometricFrame can do everything that a JFrame can do.  It can become visible, change its size, etc.
+
+  How do we get the GeometricFrame to do something JFrame cannot?   We put a method inside the GeometricFrame class body.
+     Everything we place inside the class will be indented.  This is the professional Java style (and general coding style) used to make clear what is inside the class and what is not.
+
+  We added two methods:
+
+    1) transpose:  flips the height and with width of the window.
+
+       What access modifier?  public: we want to be able to use this method anywhere.
+       Do we want a class methd or an instance method?
+	   That means, do we want to call the method as:    window.transpose()     <- an instance method
+	                                             or:    GeometricFrame.transpose(window)    <-  a class method
+           We decided that the instance method looks better.
+       What return type?  void: there is nothing we need to return. 
+       What name?  transpose:  a great choice!
+       What input values?  No input.  We want to just type window.transpose() to flip the window, similar to window.getHeight() to get the height.
+	 One way to think of it: the window knows its own height and width.  We only should only provide as input data that the window does not already know.
+
+	  public void transpose() {
+
+
+       Now, how do we get the height and width of the window?  We use the getHeight() and getWidth() methods.  But whose height and width?
+       When we type window.transpose() we want window's width and height, but window is not declared inside the method body or the class.
+       The Java keyword we need is "this".
+        this is a special variable that exists inside instance (non-static) methods.
+	this stores the address to the object that the method is acting on.
+	this acts a hidden parameter to the method.  We do not see it as input to the method, but it is.  When we call window.transpose(), Java will take the value stored in window (an address for an object) and copy it into the special variable called this.
+
+	(Ex: When we call "f.setSize(300, 500)", there are actually 3 inputs to the method setSize: f, 300, 500.  
+             The setSize method parameter is   "public void setSize(int width, int height) {"
+             The 300 is copied to and stored into "width", the 500 is copied to and stored in "height", and the address stored in "f" is copied to and stored in the special variable "this".
+    
+	So, here is our method:
+
+	  public void transpose() {
+	    int height = this.getHeight();
+	    int width = this.getWidth();
+	    this.setSize(height, width);
+	  }
+
+	You don't actually need the variables here.  Check the actual code from the class lecture to see the solution without variables.
+
+
+   2) isEqualArea:  returns true if this window is equal in area to another window
+	What access modifier?  public so we can use the code anywhere
+	Class or instance methods?   instance for the same reason as transpose above
+	What return type?  boolean, to say true or false
+	What input values?  We need to know what window we are comparing this window to.  So we need a single input value
+	   What should I use for the input type?  I decided on JFrame.
+	   
+	  public boolean isEqualArea(JFrame window) {
+
+	Now, to compare the area, we need the width and the height
+     
+	  public boolean isEqualArea(JFrame window) {
+	    int myArea = this.getWidth() * this.getHeight();
+	    int windowArea = window.getWidth() * window.getHeight();
+
+	  Now, what do we return?  The result of comparing the two areas.
+	    (Remember, that we can use any expression anywhere in the code as long as the types match.  Here, we need to return a boolean.
+
+	    return myArea == windowArea;
+
+	 So, here is the full code:
+
+	  public boolean isEqualTo(JFrame window) {
+	    int myArea = this.getWidth() * this.getHeight();
+	    int windowArea = window.getWidth() * window.getHeight();
+	    return myArea == windowArea;
+	  }
+
+	Again, we can write this without using the two variables "myArea" and "windowArea".
+
+    How do we call the method?
+
+	GeometricFrame frame1 = new GeometricFrame(100, 100);
+	GeometricFrame frame2 = new GeometricFrame(1000, 10);
+
+	frame1.isEqualArea(frame2)
+
+      What is important?  The value to the left of the dot must be of type GeometricFrame, and frame1 is.
+	The input value must be of type JFrame, but we gave it a frame2 that has type GeometricFrame.
+
+	This is okay because the rules for automatic widening applies to non-primitive types as well as primitive types.
+	   Just as int values are automatically widened to double when needed (but the other direction requires a typecast),
+	     a value that is a class type can be automatically widened to its super class (but the other direction requires a typecast).
+
+	In this case, GeometricFrame can be automatically widened to JFrame because GeometricFrame extends JFrame (in the header of the class).  That says GeometricFrame is a more specialized (or narrower) version of a JFrame.
+
+	More on non-primitive type rules this week and next week!
+
+

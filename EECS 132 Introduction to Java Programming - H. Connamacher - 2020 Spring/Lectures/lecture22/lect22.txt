@@ -1,0 +1,210 @@
+We began with a review of Non-primitive Types:  Classes, Abstract Classes, and Interfaces
+
+  Classes and abstract classes can form a "class hierarchy" that is a tree.
+    An abstract class can contain everything a class can contain plus abstract methods.
+    You can't directly instantiate an abstract class.
+
+  An interface adds to the hierarchy, but outside of the "class hierarchy tree".
+    Interfaces can contain
+      - static methods
+      - static final fields
+      - static nested classes
+      - most importantly, public abstract instance methods
+
+     In Java 8, interfaces can have "default" method bodies for their abstract methods.  When a class inherits the method stub / abstract method, if the class does not already have a method (or abstract method) of that name, the Java compiler
+   will create the overloaded method for you automatically and textcopy the default method body into the code.  This is NOT the same as inheriting the method.
+
+
+Review of Polymorphism
+
+  Key ideas:            An object is many types at the same time: its true type plus all types that the true type extends
+                         or implements.
+                        An object's true type is what it is when created  (new MyClass() creates an object with true type MyClass)
+                        An object's current type is whatever it is currently being used as via typecasts or Java's type rules
+                        The compiler verifies that you are using the current type properly
+                                - You can only access fields available to the current type
+                                - You can only call a method with a name and parameter signature that exists in the current type
+                        The true type determines what method version is actually run.
+
+  Creating a hierarchy:
+    We can use classes, abstract classes, or interfaces.
+    Classes and abstract classes form the "main" hierarchy that is a tree.
+    Interfaces are used when we need to model ideas that do not fit into a tree.
+    1) "is-a":  If A "is-a" B then A and B are non-primitive types where A extends or implements B.
+      - if A is not a B, then we do not relate A and B in a hierarchy.
+    2) "has-a": If A "has-a" B then B is a method in A.
+      - likewise, if A does not have a B, then we do not put B into A.
+
+  Generally, try to get most of your hierarchy into the class tree uses classes and abstract classes.
+    This way you can take full advantage of instance method inheritance including instance fields.
+  Where things don't fit nicely into a tree, you use interfaces.
+    Using interfaces generally requires a little more coding to get the inheritance to work because interfaces can't have instance fields.
+
+
+Java Shortcuts:
+   Binary Operator shortcuts:
+        i += 3    <- shorthand for i = i + 3
+             This shortcut works for all binary operators:
+        x /= 10   <- shorthand for x = x / 10
+
+   Conditional Operator:
+	condition ? value1 : value2
+          - if condition is true, the result is value1.  Otherwise the result is value2
+
+	Instead of 
+	   if (x <= 10)
+	     y = 5;
+	   else
+	     y = -5;
+	We can write
+	    y = (x <= 10) ? 5 : -5;
+	    
+	Instead of
+	   if (x < 0)
+	     return -1 * x;
+	   else
+	     return x;
+	We can write
+	   return x < 0 ? -1 * x : x;
+
+    Switch Statements:
+	Multiple if statements that test equality of values:
+	  if (month == 1)
+	    days = 31;
+	  else if (month == 2)
+	    days = 28;
+	  else if (month == 3)
+	    days = 31;
+
+	switch (month) {
+	  case 1:
+	    days = 31;
+	    break;
+	  case 2:
+	    days = 28;
+	    break;
+	 
+	-or-
+
+	switch (month) {
+	  case 1:
+	  case 3:
+	  case 5:
+	  case 7:
+	  case 8:
+	  case 10:
+	  case 12:
+	    days = 31;
+	    break;
+	  case 2:
+	    days = 28;
+	    break;
+	  default:
+	    days = 30;
+	    break;
+	}
+
+	Note that break is used to exit execution.  If a break is omitted on a case, execution "falls through" to the next case.
+
+	Important: the switch statement uses == to test equality.  This works well with primitive, and it can work with objects -as long as you are testing whether two objects are the same address-.
+	  (Exception, starting in Java 7, the case will test the contents of String).
+
+   Increment and Decrement Shortcuts
+        i++   <- increments i and then returns the original value of i
+        ++i   <- increments i by 1 and then returns the new value of i
+        i--   <- same but with a decrement by 1
+        --i
+
+    Be careful that you use the ++ shortcut correctly!  i++ and ++i have different effects.
+
+    Ex:   i = 5;
+          i = ++i;
+
+           1. i is incremented to 6
+           2. the value of i is returned and stored into i
+         The result is that i stores 6.
+
+          i = 5;
+          i = i++;
+
+            1. The value of i is returned and remembered for when the right side is done evaluating
+            2. The value of i is incremented to 6
+            3. The original remembered value of i is stored into i.
+          The result is that i stored 5.
+
+     Increment and loops:
+	for (int i = 0; i < a.length; i++)
+	  a[i] = i;
+
+	for (int i = 0; i < a.length; ++i)
+	  a[i] = i;
+
+      Both of the above loops do the same thing.  a is assigned {0, 1, 2, 3, ...}
+
+	int i = 0;
+	while (i < a.length)
+	  a[i++] = i;
+
+ 	int i = 0;
+	while (i < a.length)
+	  a[++i] = i;
+
+       These two loops are different.  The first assigns to a {1, 2, 3, ...}.  The second skips over the first element to give {*, 1, 2, 3, ...} but then crash when it tries to store a value in a[a.length].
+
+       Here are two more
+	int i = 0;
+	while (i < a.length)
+	  a[i] = ++i;
+
+	int i = 0;
+	while (i < a.length)
+	  a[i] = i++;
+
+      The first assigns to a {1, 2, 3, 4, ...} and the second assigns to a {0, 1, 2, 3, ...}
+
+      What does this do?
+     
+	int i = 0;
+	while (i < a.length-1)
+	  a[i] += ++a[++i];
+
+
+  Not covered in lecture: Array creation and initialization shortcut.
+    Ex:   int[] a = {1, 2, 3, 4, 5};
+  Creates an array of 5 ints, and stores the listed values in the array in the order given.
+  We can put any expression that has the write type in the shortcut
+	  int[] dimensions = {j.getHeight(), j.getWidth()};
+  And it works for any array
+	  String[] greetings = {"Hello", "Hi", "Howdy", "Hey"};
+	  JFrame[] frame = {new JFrame("Window 1"), new JFrame("Window 2"), new JFrame("Window 3")};
+
+  Even multidimensional arrays
+	  int[][] grid = {{1, 2, 3, 4}, {5, 6}, {7, 8, 9 10, 11}};
+  Here, each row is getting a different length.
+
+The main method.
+  The main method is a special method of Java.  Every stand-alone program must have a main method.  It is what the Java Virtual Machine calls to start your program.
+
+  Each class may have one (and only one) main method.  The form is
+        public static void main(String[] args) {
+
+  If you have a program that contains a class with a main method, you can run your program from the command line of your computer using the Java runtime environment (JRE):
+        java DesiredClass 
+  the above can be followed by 0 or more input values that will be passed to your main method through the String array parameter.
+   (Depending on your system, you may also have to set the CLASSPATH environment property to indicate the folder where the Java files are.)
+  DesiredClass must have a main method in it.
+  See the MyFirstProgram class we wrote in the lecture. For example, try
+	java MyFirstProgram this is a test of the program
+
+  We can also create a stand alone program by placing all the classes of the program in a jar file.
+     (We will demonstrate this when we start building larger programs later in the second half of the course.)
+     (A jar file is just a collection of Java .class files, and when creating the jar file, we specify which class contains the main method that should be called when launching the program.)
+  You can then run the jar file with
+	java -jar jarfile
+  Most operating systems will let you run a jar file by just clicking on it.  
+
+  Finally, what should you place into the main method to run your program?
+    The main method is a static method.
+    The interactions pane is a static context (i.e. it acts like the body of a static method).
+    So, whatever you would have typed in the interactions pane to launch the program, place into the main method.
+

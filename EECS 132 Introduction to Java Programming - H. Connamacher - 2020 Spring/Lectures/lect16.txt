@@ -1,0 +1,113 @@
+More on Arrays
+
+Another array example:
+  Create a method that takes an int array and an int.  The array is full, but we need to put the int value at the end of the array.
+  We can't change the size of an array, so instead, we must create a brand new array, copy the values over, and then put the new value at the end.
+
+	public static int[] append(int[] array, int x) {
+	  int[] newarray = new int[array.length + 1];
+
+	  for (int i = 0; i < array.length; i = i + 1)
+	    newarray[i] = array[i];
+
+	  newarray[newarray.length - 1] = x;
+
+	  return newarray;
+	}
+
+  First, note that we needed a loop to do the copy.  If we write "newarray = array;" we instead copy the address of array to newarray.
+    That has the affect of having both newarray and array point to the same array.
+
+  Second, note that we copied x in outside the loop.  We could have tried to also include x inside the loop, but that would mean an if statement
+    and more complicated code.  To keep your code simple, remember to have each loop accomplish one task.
+
+  Third, note that we had to return newarray.  If we did not, we would lose the newarray.  
+     newarray is a local variable and so it is lost once the method ends.
+     When the method ends, all local variables and method parameters are removed from memory.
+        If we lose newarray, we lose the address to the new array.
+     By returning the new address, we can have it outside the method.
+     Another incorrect assumption is to have an assignment statement:  array = newarray.  
+      This would copy the address of newarray to array, but it has the same problem because array is a method parameter.  Thus array will be lost once the method ends.
+
+  Example:
+	myArray = append(myArray, 11);
+  Will create a new array one larger than myArray, copy the data over, add 11 to the end, and then return the address of the new array, and that address is stored in myArray.
+  myArray now points to a new array one larger than the array it originally pointed to.  The old array is still in memory. Java will eventually de-allocate it if there are no other variables storing its address.
+
+
+
+
+Arrays and Typecasting
+
+  We can always typecast an array to Object because everything that is not a primitive value in Java is an object.
+
+    int[] array1     <- array1 will store the location of the array in memory
+    new int[100]     <- the new operator will return the address of the array
+    (Object)array1   <- the typecast is legal because Object is above everything in the class hierarchy.
+
+  Typecasting the individual variables in the array
+
+    Because a typecast on a non-primitive type does not change the true type of the object, just its current type, Java allows us to typecast the types of the variables for arrays of non-primitive types:
+	JFrame[] frameArray = new JFrame[100]
+	Object[] oArray = (Object[])frameArray; <- Legal.  Object is wider than JFrame.  An explicit typecast is not needed.
+	frameArray = (JFrame[])oArray;		<- Legal as long as the true type of oArray is an array storing JFrames or something below JFrame in the hierarchy
+	oArray[0] = new JFrame();
+	oArray[1] = "Hello"			<- Illegal.  While Object o = "Hello" is legal, here oArray[1] is referring to an element of frameArray.  frameArray knows that it is only to store JFrames.
+
+    This does not work for primitive arrays:
+	int[] array = new int[10];
+	double[] darray = (double[])array;	<- Illegal.  Even though double is wider than int, Java will not allow this.
+	char[] letters = new char[100];
+	short[] values = (short[])letters;	<- Illegal.  Even though char and short are the same byte size, Java will not allow this.
+    Java forbids any typecasting between primitive array.
+
+
+
+Multidimensional Arrays
+  Java does not have true multi-dimensional arrays.
+  Instead, Java allows arrays to store other arrays.
+
+  For example, to declare and create an array storing double:
+	double[] array = new double[10];
+  To declare and create an array of arrays that stores double:
+	double[][] table = new double[5][8];
+
+  We read the type right to left.  The right most [] indicates that we have an array, and what comes before the [] (i.e. "double[]") indicates the type stored in the array.
+  We read the array creation left to right.  What we have is an array of 5 elements, and each element is an array of 8 doubles.
+
+  To access an element:
+     table[3][5]   <-  again we read left to right.  In the first array, we go to the 4th element.  That element is an array of double.  (We can think of it as the 4th row of the table.)
+                        Then, we go to the 6th element of that array.  (We can think of it as going to the 6th column of the array.)
+
+	- but if thinking of the array as rows and columns, always remember that there is no "column" stored in memory.  We just have an array storing arrays.
+
+  Since it is an array storing arrays, we can do things in Java that you can't do with a "real" multidimensional array.
+
+	int[][] a = new int[10][5];     // creates an array of 10 "rows", each row is an array of 5 ints
+	a[3] = new int[100];		// now the 4th "row" is length 100 (but the others all still have length 5
+	a[4] = a[3]			// the 5th row is also the 4th row
+	a[0] = null;			// the 1st "row" is now gone
+
+I am not sure if your guest lecturer got this far, but here are a few more facts on arrays of arrays:
+
+1) You do not have to specify all the sizes of the array as long as what you declare can be a valid array
+2) Looping through a multidimensional array is the same as looping through a normal array
+
+   We can have an array store arrays of array:
+	String[][][] biggerArray = new String[5][10][20];
+   Note that we do not have to specify all the sizes.  
+	String[][][] biggerArray
+	String[][][] biggerArray = new String[5][][];
+	String[][][] biggerArray = new String[5][10][];
+     are all legal.  When we leave a size blank, Java does not create those arrays.  For example, new String[5][][] creates an array of 5 variables, each variable has type String[][], but the variables are 
+     set to null.
+
+Example: loop through the elements of a two dimensional array
+
+	int[][] array = new array[10][3];
+
+	for (int i = 0; i < array.length; i = i + 1) {	<-  notice that nothing has changed from how we traverse through a "normal" array
+	  for (int j = 0; j < array[i].length; j = j + 1) { 	<-  nothing changed here, except that the array we are going to traverse through has its address stored in table[i]
+
+  
+

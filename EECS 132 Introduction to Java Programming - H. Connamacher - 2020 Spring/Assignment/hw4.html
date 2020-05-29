@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+     "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+<title>EECS 132: Homework Assignment 4</title>
+</head>
+
+<body>
+<h2>Programming Project 4</h2>
+<h3>Due Tuesday, April 14 at 11:59pm (EDT)</h3>
+
+<p><em><strong>IMPORTANT:</strong> Read the
+<strong>Do's and Dont's</strong>
+in the <strong>Course Honor Policy</strong> found on the Canvas class site. </em>
+</p>
+
+
+<h3>I. Overview</h3>
+
+<p>The purpose of this project is to practice using linked lists, array lists, generic types, iterators, and comparators.</p>
+
+<hr />
+
+<h3>II. Code Readability (20% of your project grade)</h3>
+
+<p>To receive the full readability marks, your code must follow the following guideline:
+<ul>
+<li>All variables (fields, parameters, local variables) must be given appropriate and descriptive names.</li>
+<li>All variable and method names must start with a lowercase letter.  All class names must start with an uppercase letter.</li>
+<li>The class body should be organized so that all the fields are at the top of the file, the
+constructors are next, the non-static methods next, and the static methods at the bottom with the main method last.</li>
+<li>There should not be two statements on the same line.</li>
+<li>All code must be properly indented (see Appendix F of the Lewis book for an example of good style).
+    The amount of indentation is up to you, but it should be at least 2 spaces, and it must be used
+    consistently throughout the code.</li>
+<li>You must be consistent in your use of {, }.  The closing } must be on its own line and indented
+the same amount as the line containing the opening {.</li>
+<li>There must be an empty line between each method.</li>
+<li>There must be a space separating each operator from its operands as well as a space after each comma.</li>
+<li>There must be a comment at the top of the file that <strong>is in proper JavaDoc format</strong> and
+includes both your name and a description of what the class represents.  The comment should include tags for the author.  (See Appendix J of the Lewis book of pages 226-234 if the Evans and Flanagan book.)</li>
+<li>There must be a comment directly above each method (including constructors) that <strong>is in proper JavaDoc format</strong>
+ and states <em>what</em> task the method is doing, not how it is doing it.  The comment should include
+ tags for any parameters, return values and exceptions, and the tags should include appropriate comments
+ that indicate the purpose of the inputs, the value returned, and the meaning of the exceptions.</li>
+<li>There must be a comment directly above each field that, in one line, states what the field is storing.</li>
+<li>There must be a comment either above or to the right of each non-field variable indicating what the variable is storing.  Any comments placed to the right should be aligned so they start on the same column.  Variables that are only used as an index in a loop do not need a comment.</li>
+<li>There must be a comment above each loop that indicates the purpose of the loop.  Ideally, the comment would
+consist of any preconditions (if they exist) and the subgoal for the loop iteration.</li>
+<li>Any code that is complicated should have a short comment either above it or aligned to the right that
+explains the logic of the code.</li>
+</ul>
+</p>
+
+<hr>
+
+<h3>III. Program Testing (20% of your project grade)</h3>
+
+<p>You are to create JUnit tests. 
+If you added additional methods to the linked list class (including methods you added in a lab),
+you should submit a <em>separate</em>
+JUnit test class for the linked list that tests those methods. You do not have to write a JUnit tests for the
+methods you did not write.
+For the other class or classes of this project, you may submit one or multiple JUnit test classes.  It is your choice.</p>
+<p>
+Your report should be a short
+document that explains why the JUnit tests you provide thoroughly test your program.  
+<strong>However</strong>, you should not JUnit test the <tt>main</tt> method
+or methods that specifically
+read from a file or methods that write to the screen.  
+For these methods, your testing report should describe the tests you did to judge the correctness of your program.</p>
+
+
+<h3>IV. Java Programming (60% of your grade)</h3>
+
+
+<p>Remember that in the homework, you will be writing JUnit test cases.  A <strong>strong</strong> recommendation is to write
+your JUnit test cases <em>at the same time</em> as you complete each part of the program.</p>
+
+<h4>Very Important Programming Rules</h4>
+
+<ul><li><p>The main purpose of this project is to gain practice using linked lists and arrays and writing code with generic types.
+For the arrays, you will use the <tt>ArrayList</tt> class from the Java API.
+The <tt>ArrayList</tt> class "wraps" an array with helpful methods and
+it allows us to use generic types.
+You must use <tt>ArrayList</tt> explicitly as arrays.  Therefore you may 
+not use the automatic resize feature of <tt>ArrayList</tt> (where it will
+create a new array and copy all the data over)
+but you must instead set its initial capacity appropriately.  Likewise,
+you should not insert into the middle of the <tt>ArrayList</tt> in a way
+that requires all the data to be shifted over.</p>
+
+<p>For the linked list, you have your choice
+of whether you
+want to use the <tt>LinkedList</tt> or the <tt>DoubleLinkedList</tt> class from class or the <tt>LinkedList</tt>
+class from the Java API.
+You must use the linked list explicitly as a linked list.  You may not use code that is inefficient in a linked list <em>even if the Java API optimizes that code</em>.
+Therefore, you can not access a linked list element by its index.  Instead, you may use methods like adding and removing from the ends, testing if a list is empty, or using an iterator for the list.  Similarly,
+if you are using our linked list or double linked list class, you should not use or add inefficient helper methods. </p>
+</li>
+
+<li>The second purpose of the homework is to use generic types appropriately.  Your code should not generate any warning messages when compiled.  (If you are not using DrJava, be sure to have it set so your IDE shows generic type warnings.)
+</p>
+</li>
+</ul>
+
+<h4>What you are to do</h4>
+<p>You may add any classes or methods to the following as you see fit in order to complete the given tasks.</p>
+
+
+<p>This class will implement a generic database.  This database will let you add and delete items, look up items, and sort by different fields.  The database will be not be specific
+to any type of data so please note, you will need to use generic types, but the generic types are not specified in the instructions.  Modern databases use a special datatype
+called a <em>B-tree</em> to store the data in a way that gives both fast access and relatively quick insertion and deletion.  You will learn about B-trees in EECS 233.  For
+this project, we will use arrays (actually ArrayLists)  and linked lists get a similar behavior.</p>
+
+<p>The database will store its data in a list of nodes (like the <tt>LLNode</tt> or the <tt>DLNode</tt> types from our course).  This way
+we can quickly insert and (relatively) quickly delete.</p>
+<p>In addition, we will create <em>indexes</em> into the data.  Each of our indexes will be an <tt>ArrayList</tt> that stores the same elements as the nodes. (We are not actually
+duplicating the data since only addresses are stored.)  Each index will be sorted according to some <em>trait</em>.  Then, if we want to lookup data by some <em>trait</em> and
+we have an index for the <em>trait</em> available, we can use a faster <em>binary search</em> (already implemented in the API) 
+that can be used on sorted arrays.</p>
+
+<p>In this homework, you will use <tt>Scanner</tt>, <tt>Comparator</tt>, <tt>ArrayList</tt> and <tt>Hashtable</tt> from the Java API.  For the <tt>LinkedList</tt>, you may use either the one from
+the API or one that we developed in the course.  However, the linked list you use must implement <tt>Iterable</tt>.</p>
+
+<p>Create the following classes:
+<ul><li><p><tt>DatabaseType</tt>: an interface that contains one method
+    <ol><li><p><tt>Comparator getComparatorByTrait(String trait)</tt> where <tt>Comparator</tt> is an interface in <tt>java.util</tt>.</p></li></ol>
+   </p></li>
+
+<li><p><tt>Database</tt>: a class that limits the types it can store to <tt>DatabaseType</tt>s.  The database will store the data in nodes, just like a linked list.
+The database will also let the user create an <em>index</em> for the database.  An index is a sorted array (or in our case, a sorted <tt>ArrayList</tt>) of the data so that
+searches can happen quickly.
+The <tt>Database</tt> class should have the following fields:
+<ol><li><p>A <em>node</em> (something like <tt>LLNode</tt> or <tt>DLNode</tt>) that indicates the start of the list of nodes that store the data in the database.</p></li>
+    <li><p>A <tt>Hashtable</tt> that uses <tt>String</tt> as the key and <tt>ArrayList</tt> as the value.  The hashtable will store the different <em>index</em>es
+       available to fast sort the data.</p></li>
+    <li><p>an <tt>int</tt> that stores the number of elements being stored
+in the database.</p></li></ol>
+The <tt>Database</tt> should have the following methods:
+<ol><li><p><tt>void add</tt> takes an <em>element</em> add adds it to the database by creating a node for the data and attaching it to the list of nodes.
+    The hashtable is cleared because all indexes stored in it are no longer valid.  The <tt>add</tt> method should work very quickly, and so no traversal of the nodes is allowed.</p></li>
+    <li><p><tt>void delete</tt> takes an <em>element</em> and deletes the element from the list of nodes.  If the element occurs more than once in the list, all copies should be deleted.  If anything is deleted, the hashtable is cleared because the indexes are
+              no longer valid.  You may use linear search (the normal for-loop search) to find the element to delete. </p></li>
+    <li><p><tt>int size</tt> returns the number of elements currently stored
+in the database (use the field and do not write a loop).</p></li>
+    <li><p><tt>LinkedList lookupInList</tt> takes a value and a <tt>Comparator</tt> and returns a <tt>LinkedList</tt> that contains all elements in the database that match the input value.  
+	Do a <em>linear search</em> (i.e. for loop) on the database's list of nodes, use the <tt>Comparator</tt> to identify all elements in the list of nodes that match the input value, 
+        and add those values to the <tt>LinkedList</tt>.  If no such elements exists, an empty <tt>LinkedList</tt> is returned.  Note that the type of the input <em>value</em>
+        will match the type of the elements in the database.</p></li>
+    <li><p><tt>LinkedList lookupInIndex</tt> takes a value, an <tt>ArrayList</tt> <em>index</em>, and a <tt>Comparator</tt> and returns a <tt>LinkedList</tt> that contains
+               all elements of the database that match the input value.  You may assume the <tt>ArrayList</tt> is already sorted according to the input <tt>Comparator</tt>. 
+               Do a <em>binary search</em> on the <tt>ArrayList</tt> using the <tt>Comparator</tt> to find one
+               element that matches the input value. (I recommend using the binary search from the Java API <tt>Collections</tt> but you are welcome write your own.) 
+               Then, using the <tt>Comparator</tt>, find all elements in the <tt>ArrayList</tt> that matches the input value and place them
+               into a <tt>LinkedList</tt>. (Remember, the <tt>ArrayList</tt> is sorted so you can do this quickly.)  
+               If no such elements exist, return an empty <tt>LinkedList</tt>.  Note that the type
+               of the input value will match the type stored in the database.</p></li>
+
+    <li><p><tt>void makeIndex(String trait)</tt>:  If the database is empty, this method does nothing.  Otherwise, since the database contains only elements that are <tt>DatabaseType</tt>s,
+           call the <tt>getComparatorByTrait(trait)</tt> method, using the <tt>trait</tt> to retrieve a <tt>Comparator</tt>.  Create an <tt>ArrayList</tt> and copy the addresses of the elements
+           of the database into the <tt>ArrayList</tt>.  Sort the <tt>ArrayList</tt> using the <tt>Comparator</tt>, and store the <tt>ArrayList</tt> into the hashtable using the
+           <tt>trait</tt> as the key.  (You may use a sort from the Java API <tt>Collections</tt> or <tt>ArrayList</tt>, or you may write your own, but if you do your own sort, it must be efficient.)</p></li>
+
+    <li><p><tt>LinkedList lookup</tt> takes a <tt>String trait</tt> and a value.  If there exists an index in the hashtable that has a key that matches the input <em>trait</em>, call 
+        <tt>lookupInIndex</tt> with the given value, the <tt>ArrayList</tt> index, and the appropriate <tt>Comparator</tt> for the <em>trait</em>. (You can get the <tt>Comparator</tt> by calling
+        the value's <tt>getComparatorByTrait</tt> method.).  Otherwise, if there does not exist an index in the hastable for the input <em>trait</em>, call
+        <tt>lookupInList</tt> with the given value and the appropriate <tt>Comparator</tt> for the <em>trait</em>. Return the <tt>LinkedList</tt> returned by these methods.
+        (Note, if the database is empty, this method should return an empty <tt>LinkedList</tt>.)</p></li>
+
+    <li><p><tt>ArrayList getList(String trait)</tt>: If an index for <em>trait</em> exists in the hashtable, return it.  Otherwise, call <tt>makeIndex</tt> with the <tt>trait</tt>
+        to create the index and return that index.  (Note that if the database is empty, the method should return an empty <tt>ArrayList</tt>.)</p></li></ol></p></li>
+
+<li><p><tt>Contact</tt>: a class that represents a phone/email contact.  The <tt>Contact</tt> class should implement the <tt>DatabaseType</tt> interface.
+   A contact should have three <tt>String</tt>s, a <em>name</em>, a <em>phone number</em>, and a <em>e-mail</em>.  You should have the appropriate constructor as well as 
+   getter and setter methods.  In addition, you should have the following methods:
+   <ol><li><p><tt>String toString</tt> overriding the method of <tt>Object</tt></p></li>
+       <li><p><tt>boolean equals</tt> overriding the method of <tt>Object</tt>.  Two contacts should be equal if all fields are equal.</p></li>
+       <li><p><tt>Comparator getComparatorByTrait(String trait)</tt>: if the <tt>trait</tt> is <tt>"name"</tt>, the method should return a <tt>Comparator</tt> that compares two
+             <tt>Contact</tt>s by the name field.  If the <tt>trait</tt> is <tt>"phone"</tt>, the method should return a <tt>Comparator</tt> that compares two
+             <tt>Contact</tt>s by the phone number field.  If the <tt>trait</tt> is <tt>"email"</tt>, the method should return a <tt>Comparator</tt> that compares two
+             <tt>Contact</tt>s by the e-mail field.  Otherwise, the method should return <tt>null</tt>.</p></li>
+        </ol></p></li>
+
+<li><p><tt>ContactDatabase</tt>: a <tt>ContactDatabase</tt> is a <tt>Database</tt> that stores <tt>Contact</tt>s.  The class should have the following methods:
+   <ol><li><p><tt>printList</tt>: takes an <tt>Iterable</tt> and prints the contents of the <tt>Iterable</tt> using <tt>System.out</tt>.  Each entry should go on its own line, 
+        and each line should be numbered, starting at 1.</p></li>
+       <li><p><tt>main</tt>:  The main method should do the following, either inside the method or in helper methods.  It should create a <tt>ContactDatabase</tt> and a <tt>Scanner</tt>
+          object that reads from <tt>System`.in</tt>.  You should have a loop that reads use input using <tt>Scanner.next()</tt> or <tt>Scanner.nextInt()</tt>.
+          The loop does the following:
+     <ol type="a"><li>If the user enters <tt>"quit"</tt>, exit the program.</li>
+                  <li>If the user enters <tt>"add"</tt>, create a new <tt>Contact</tt> with the next three strings entered by the user, and add the <tt>Contact</tt> to the database.
+                      (For example, the user could type "add Harold 368-5877 hsc21" and a <tt>new Contact("Harold", "368-5877", "hsc21")</tt> is added to the database.)</li>
+                  <li>If the user enters <tt>"listby"</tt>, the next input will be the <em>trait</em>. Then call the <tt>getList</tt> method with the trait (assuming it is valid),
+                       and call the <tt>printList</tt> method with the returned list. (For example, the user could type <tt>"listby name"</tt> and all the contacts in the database
+                       we be listed in order of the name.)</li>
+                  <li>If the user enters "find", the next two user inputs will be a <em>trait</em> and a <em>value</em>.  (For example, "find name Harold" or "find email hsc21".)
+                      Create a new <tt>Contact</tt> with the given value (set the other values to <tt>null</tt>), call the <tt>lookup</tt> method with the trait and the <tt>Contact</tt>,
+                      and call <tt>printList</tt> with the returned list.</li>
+	          <li>If the user enters <tt>"delete"</tt>, the next input will be a number.  (For example "delete 2".)  Then, the element that was at that number in the last
+                       printed list is deleted from the database.  (Note that you will need to remember the last list returned by either <tt>"find"</tt> or <tt>"listby"</tt>.)</li>
+		  <li>If the user enters <tt>"makeindex"</tt>, the next input will be a <em>trait</em>, and the <tt>makeIndex</tt> method will be called with that trait.</li>
+        </ol>
+      If the user enters an invalid command, print an appropriate message to the user.
+      </p></li></ol></p></li></ul>
+
+</p>
+
+
+</body>
+
+</html>
+</body>
+
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+     "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+<title>EECS 132: Homework Assignment 3</title>
+</head>
+
+<body>
+<h2>Programming Project 3</h2>
+<h3>Due Tuesday, March 31 at 11:59pm (EDT)</h3>
+
+<p><em><strong>IMPORTANT:</strong> Read the
+<strong>Do's and Dont's</strong>
+in the <strong>Course Honor Policy</strong> found on blackboard. </em>
+</p>
+
+
+<h3>I. Overview</h3>
+
+<p>The purpose of this project is to give you practice designing a class/type hierarchy.  It is <em>important</em>
+that you spend time designing your class hierarchy <em>before</em> you start coding.  
+If you properly organize your classes and/or interfaces, you can achieve the desired program behavior below with significantly
+less code than with a poorly organized hierarchy.
+This project will also how there are limitations to what we can do with Java's classes and interfaces.</p>
+
+<hr>
+
+<h3>II. Code Readability (20% of your project grade)</h3>
+
+<p><strong>New for this assignment:</strong> The comments above the class or interface and above each method must be written
+in JavaDoc format.  You will be introduced to JavaDoc style commenting in the labs.  You can also find
+a description in the <em>Java in a Nutshell</em> text.  Be sure to run JavaDoc and view the webpage in order to 
+verify that you have implemented the comments correctly.</p>
+
+<p>To receive the full readability marks, your code must follow the following guideline:
+<ul>
+<li>All variables (fields, parameters, local variables) must be given appropriate and descriptive names.</li>
+<li>All variable and method names must start with a lowercase letter.  All class and interface names must start with an uppercase letter.</li>
+<li>The class body should be organized so that all the fields are at the top of the file, the
+constructors are next, the non-static methods next, and the static methods at the bottom.</li>
+<li>There should not be two statements on the same line.</li>
+<li>All code must be properly indented (see page 644 of the Lewis book for an example of good style).
+    The amount of indentation is up to you, but it should be at least 2 spaces, and it must be used
+    consistently throughout the code.</li>
+<li>You must be consistent in your use of {, }.  The closing } must be on its own line and indented
+the same amount as the line containing the opening {.</li>
+<li>There must be an empty line between each method.</li>
+<li>There must be a space separating each operator from its operands as well as a space after each comma.</li>
+<li>There must be a comment at the top of the file that <strong>is in proper JavaDoc format</strong> and
+includes both your name and a description of what the class represents.  The comment should include tags for the author.</li>
+<li>There must be a comment directly above each method (including constructors) that <strong>is in proper JavaDoc format</strong>
+ and states <em>what</em> task the method is doing, not how it is doing it.  The comment should include
+ tags for any parameters, return values and exceptions, and the tags should include appropriate comments
+ that indicate the purpose of the inputs, the value returned, and the meaning of the exceptions.</li>
+<li>There must be a comment directly above each field that, in one line, states what the field is storing.</li>
+<li>There must be a comment either above or to the right of each non-field variable indicating what the variable is storing.  Any comments placed to the right should be aligned so they start on the same column.</li>
+<li>There must be a comment above each loop that indicates the purpose of the loop.  Ideally, the comment would
+consist of any preconditions (if they exist) and the subgoal for the loop iteration.</li>
+<li>Any code that is complicated should have a short comment either above it or aligned to the right that
+explains the logic of the code.</li>
+</ul>
+</p>
+
+<hr>
+
+<h3>III. Program Testing (20% of your project grade)</h3>
+
+<p><strong>New for this assignment:</strong> The testing routines should be included in a JUnit test class.
+</p>
+
+<p>You are to write a test report that indicates the <em>kinds</em> of tests needed to thoroughly test 
+your project.  The tests should demonstrate that all of your methods behave correctly.  An conditional statements
+will need tests that go through each branch of the execution.  Any loops will need tests that cover the
+"test 0, test 1, test many" and "test first, test middle, test last" guidelines.  Your testing report should
+<em>not</em> list the actual tests and results.</p>
+
+<p>You are to have a JUnit test class or classes that implement each of the needed tests.  Comments and method
+names in your JUnit class should connect to your testing report.  
+For example, if your testing report states "<em>method <tt>xxx</tt> must be tested with string inputs of different lengths</em>", 
+then the reader should be able to go to the JUnit class and easily identify the tests that test that method on inputs of length 0, 1, and more than 1.</p>
+
+<p><em>The testing report must be separate from the JUnit class.</em> In most companies, the testing document
+will be written in a style that allows both programmers and non-programmers to read it and recognize whether all the
+needed test cases were included.</p>
+
+<p><strong>Routines you do not have to JUnit test</strong>: Some methods print to the screen, such as the constructor and 
+<tt>draw</tt> methods of <tt>DrawingPad</tt> are not easy to test with JUnit.  
+For these methods, your testing report should still state how you will test
+them, and then you will test them yourself by running your code (similar to what you did for previous projects).
+<p>
+
+<p><strong>Testing inherited routines</strong>: You are not <em>required</em> to have tests for methods that a class inherits but
+does not override.  However, many companies will require you to write tests for them.  The reason is that later updates may choose
+to override the methods and you want the tests already there for when that happens.  A very good practice is to write your tests
+<em>before</em> you design your program based on what the desired final results are,
+and then the tests will verify that the classes perform correctly regardless of how you
+decide to create your hierarchy.</p>
+
+
+<hr>
+
+<h3>IV. Java Programming (60% of your grade)</h3>
+<p>
+<p><strong>Design Rules:</strong> Your project must contain the following types and each type must contain the listed methods.
+The project <em>may</em> use any combination of classes, abstract classes, or interfaces that you feel is appropriate.
+The project <em>may</em> add additional types to the ones listed.
+The classes/types <em>may</em> contain additional methods to the ones listed if you 
+feel they are needed.
+You may use any combination of inheritance, method overriding, and method overloading to achieve the needed behavior.
+Part of the coding grade will be the quality of the hierarchy you create. 
+</p>
+
+<p><strong>Hint (repeated from above):</strong> Spend a lot of time designing your hierarchy <em>before</em> you code.  A well designed hierarchy
+will reduce the amount of code you have to write.</p>
+
+<h3>Programming (60% of the project grade)</h3>
+
+<p>Here is a Java shortcuts you will use: variable length parameters.</p>
+
+<h4>An overview of variable length parameters</h4>
+
+<p>A variable length parameter is a Java shortcut that can be used by a method that takes an array as input.  With the shortcut, you do not need to create the array explicitly.
+For example:
+<pre>
+public int maximum(int[] a) { 
+  int max = 0;
+  for (int i = 1; i < a.length; i++)
+    if (a[i] > a[max])
+      max = i;
+  return max;
+}
+</pre>
+is the normal way we pass an array to a method.  To call <tt>maximum</tt>, we must create an array first:  <tt>maximum(new int[]{1, 2, 3})</tt>.</p>
+<p>If we change <tt>maximum</tt> to take a <em>variable length parameter</em>, it looks like this:
+<pre>
+public int maximum(int... a) { 
+  int max = 0;
+  for (int i = 1; i < a.length; i++)
+    if (a[i] > a[max])
+      max = i;
+  return max;
+}
+</pre>
+Notice that the body of <tt>maximum</tt> did not change.  The input <tt>a</tt> is still an array of <tt>int</tt>.  However, we now have two ways to call <tt>a</tt>.  We can still use the traditional way of 
+passing in an array: <tt>maximum(new int[]{1, 2, 3})</tt> or we can just pass in the elements and Java will automatically place them in an array of the correct size: <tt>maximum(1, 2, 3)</tt>.
+Note that there can be only one <em>variable length parameter</em> per method, and the <em>variable length parameter</em> must be the last parameter of the method.  (Can you see why?)</p>
+
+<h4>Your programming task</h4>
+
+<p>This project will have you build a hierarchy of shapes similar to, but also different from,
+the lecture hierarchy.  To that hierarchy, we are going
+to add a <em>canvas</em> window so that your program can draw the shapes you create.</p>
+
+<h4>Part 1: Creating a canvas/drawing area</h4>
+<p>
+<ul>
+<li>The DrawingPad class.  The DrawingPad class will create a canvas where you can draw shapes.
+The DrawingPad class should have the following constructor:
+<ol type = "a">
+<li>The constructor takes two <tt>int</tt> values as input, and these will be the size of the canvas.  Your constructor
+needs to do the following:
+<ol><li>Create a <tt>JFrame</tt> object.</li>
+    <li>Create a <tt>Canvas</tt> object.  A <tt>Canvas</tt> is a Java Swing object that we can draw on.</li>
+    <li>Call the <tt>setSize</tt> method of <tt>Canvas</tt> using the values input to the constructor.  This will set the
+         size of the drawing area.</li>
+    <li>Call the <tt>setBackground</tt> method of <tt>Canvas</tt> to set the canvas's background to <tt>Color.WHITE</tt>.  </li>
+    <li>Create a <tt>JPanel</tt>.</li>
+    <li>Call the <tt>add</tt> method of <tt>JPanel</tt>, and make the input be the <tt>Canvas</tt> instance.</li>
+    <li>Call the <tt>add</tt> method of <tt>JFrame</tt>, and make the input be the <tt>JPanel</tt> instance.</li>
+    <li>Call the <tt>pack</tt> method of <tt>JFrame</tt> with no inputs. (A simple, but crude, way to get the JFrame to automatically size to fit the canvas.</li>
+    <li>Display the <tt>JFrame</tt>.</li>
+</ol></li></ol>
+The DrawingPad class should have the following methods:
+<ol type = "a">
+<li><p><tt>Graphics getGraphicsContext()</tt>: The method takes no input and returns the <em>graphics context</em> you need to draw on a canvas.
+You get the <em>graphics context</em> from the canvas by calling Canvas's <tt>getGraphics</tt> method.
+However, once you get the <em>graphics context</em> out of from the canvas you should store it.  Repeated calls to this method should
+then return the stored value instead of calling Canvas's <tt>getGraphics</tt> method a second time.
+<strong>Important</strong>: Some versions (the Oracle version in particular) 
+of the Java JDK have a glitch where, if you keep calling Canvas's <tt>getGraphics</tt> method after you
+received a <em>graphics context</em> the drawing will stop working properly.</p>
+<p>The method should work as follows.
+If you already have a <tt>Graphics</tt> instance stored, return it.  Otherwise, call the
+<tt>getGraphics</tt> method of <tt>Canvas</tt> to get the canvas's <em>graphics context</em> and return it.
+(Before returning it, you will want to store it!)  Also, the first time you get a valid <em>graphics context</em>, call
+it's <tt>setColor</tt> method to set the color of the <em>graphics context</em> to <tt>Color.BLACK</tt>.
+<em>Note:</em> the <tt>getGraphics</tt> method of Canvas will return <tt>null</tt> if the canvas is not yet
+ready to be drawn on (for example, the JFrame is not visible).
+You need to check for this so you don't call the <tt>setColor</tt> method on a <tt>null</tt> object.</p>
+
+<li><p><tt>draw</tt> : There should be a method <tt>draw</tt> that takes a single input.  You need a version of the method
+that works for all shapes of the project below.  The method will draw (in black) the shape on the canvas.
+The easiest way to draw is to use the <tt>drawLine</tt> method of <tt>Java.awt.Graphics</tt> to draw each line of the 
+input shape.
+</p></li>
+
+<li><p><tt>erase</tt>: The method should take no input, it gets the graphics context, changes the color to <tt>Color.WHITE</tt>,
+uses the <tt>fillRect</tt> method of <tt>java.awt.Graphics</tt> to fill the entire canvas area with white, and then 
+changes the color of the graphics context back to <tt>Color.BLACK</tt>.</p></li>
+
+</ol>
+</li>
+</ul>
+
+<h4>Part 1, Creating a hierarchy of types</h4>
+<p>Your project should contain the following types.  Each type can be a class, abstract class, or an interface.  
+You are welcome (and probably should) create any additional types, public, and private methods as you feel are needed.
+<br />
+<em>Please note:</em> the descriptions of these methods are what the method should do, not how you are to program it.
+Spend time thinking about how to organize your code before you code.  Your goal is to create a good hierarchy that lets
+you achieve all the behavior below without writing a large amount of code.</p>
+<ol>
+<li><p><tt>Point</tt>:  The <em>Point</em> type consists of two <tt>double</tt> values and represents a 2-dimensional point.  The <em>Point</em> type should have the following methods:
+<ul><li><tt>getX</tt> returns the x-coordinate of the point</li>
+    <li><tt>getY</tt> returns the y-coordinate of the point</li>
+    <li><tt>setX</tt> takes an <tt>double</tt> as input and changes the x-coordinate of the point.</li>
+    <li><tt>setY</tt> takes an <tt>double</tt> as input and changes the y-coordinate of the point.</li>
+    <li><tt>rotateAbout</tt> takes a <tt>Point</tt> and a <tt>double</tt> as input. 
+The double is an angle, in radians, and the method should rotate this point about the input point by the input angle.
+That means, treat the input point as the origin and rotate this point. <br />
+To treat the input point as the origin, you subtract this point's x-coordinate by the input point's x-coordinate, and subtract 
+this point's y-coordinate by the input point's y-coordinate.  Then you do the rotation: <br />
+<em>x' = x cos t - y sin t <br />
+y' = x sin t + y cos t </em> <br />
+and then add the input points x-coordinate and y-coordinates to the x' and y' values, and set the result to be this point's new coordinates. </li>
+</ul></p>
+</li>
+
+<li><p><tt>Line</tt>: The <tt>Line</tt> type consists of two <tt>Point</tt> values and represents a 2D line segment.  A <tt>Line</tt> type instance should be created with either 4 <tt>double</tt> values representing the coordinates
+    of the endpoints of the line, or it can be created with 2 <tt>Point</tt> values representing the endpoints of the line.  The <tt>Line</tt> type should
+have the following methods:
+<ul><li><tt>getFirstPoint</tt>: returns the first endpoint of the line.</li>
+    <li><tt>getSecondPoint</tt>: returns the second endpoint of the line.</li>
+    <li><tt>setFirstPoint</tt>: takes a <em>Point</em> as input and changes the first endpoint of the line.</li>
+    <li><tt>setSecondPoint</tt>: takes a <em>Point</em> as input and changes the second endpoint of the line.</li>
+    <li><tt>getLines</tt>: returns an array containing all Line types that make up this line (i.e. the array should contain only this line.</li>
+</ul></p>
+</li>
+
+<li><p><tt>Rectangle</tt>: The <tt>Rectangle</tt> type represents a rectangle.  A <tt>Rectangle</tt> type instance should be created with one <tt>Point</tt> representing the center of the
+<tt>Rectangle</tt> plus two lengths representing the height and width.
+The <tt>Rectangle</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the center of the rectangle.</li>
+  <li><tt>getWidth</tt>:  returns the width of the rectangle.</li>
+  <li><tt>getHeight</tt>: returns the height of the rectangle.</li>
+  <li><tt>setCenter</tt>: takes a Point as input and sets the center of the rectangle to this input point.</li>
+  <li><tt>setWidth</tt>:  takes a double as input that is the new width for the rectangle.</li>
+  <li><tt>setHeight</tt>: takes a double as input that is the new height for the rectangle.</li>
+  <li><tt>rotate</tt>:    takes a double as input that represents an angle in radians, and it rotates the rectangle about its center byt the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the 4 Points that make up the corners of the rectangle</li>
+  <li><tt>getLines</tt>: returns an array containing the 4 Lines that make up the border of the rectangle.</li>
+</ul></p></li>
+
+<li><p><tt>Square</tt>: The <tt>Square</tt> type represents a square.  A <tt>Square</tt> type instance should be created with one <tt>Point</tt> representing the center of the
+<tt>Square</tt> plus one double representing both the height and width.
+The <tt>Square</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the center of the square.</li>
+  <li><tt>getWidth</tt>:  returns the width of the square.</li>
+  <li><tt>getHeight</tt>: returns the height of the square.</li>
+  <li><tt>setCenter</tt>: takes a Point as input and sets the center of the square to this input point.</li>
+  <li><tt>setWidth</tt>:  takes a double as input that is the new width for the square.</li>
+  <li><tt>setHeight</tt>: takes a double as input that is the new height for the square.</li>
+  <li><tt>rotate</tt>:    takes a double as input that represents an angle in radians, and it rotates the square about its center by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the 4 Points that make up the corners of the square</li>
+  <li><tt>getLines</tt>: returns an array containing the 4 Lines that make up the border of the square.</li>
+</ul></p></li>
+
+<li><p><tt>Triangle</tt>: The <tt>Triangle</tt> type represents a triangle.  A <tt>Triangle</tt> type instance should be created with
+three <tt>Point</tt> values representing the three points of a triangle.  The <tt>Triangle</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the center of the triangle.  The center can be calculated by taking two
+lines, each from one angle to the midpoint of the opposite side, and then calculating the intersection of those lines.  
+If the end points of the first line is <em>(x1,y1)</em> and <em>(x2,y2)</em> and the end points of the second line are
+<em>(x3,y3)</em> and <em>(x4,y4)</em>, the intersection point is:<br />
+<em>x = ((x1*y2 - y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))<br />
+    y = ((x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))</em>
+</li>
+  <li><tt>setCenter</tt>: takes a Point as input and moves the triangle so it's new center is the input point.</li>
+  <li><tt>rotate</tt>: takes a double as input that represents an angle in radians, and it rotates the triangle about its center by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the 3 Points that make up the corners of the triangle.</li>
+  <li><tt>getLines</tt>:  returns an array consisting of the 3 Lines that make up the border of the triangle.</li>
+</ul></p></li>
+
+<li><p><tt>Polygon</tt>: The <tt>Polygon</tt> type represents an arbitrary polygon.  A <tt>Polygon</tt> type instance should be created with
+<em>a variable length input</em> of <tt>Point</tt> values representing the (at least three) points that make up the polygon. The <tt>Polygon</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the "center" of the polygon.
+    Since this is an arbitrary polygon, the center will be defined as the center of the bounding rectangle of the polygon.
+    (The top edge of the bounding rectangle is at the top most point of the polygon, the left edge of the bounding rectangle is
+     at the leftmost point of the polygon, and so forth.)</li>
+  <li><tt>setCenter</tt>: takes a Point as input and moves the polygon so it's new center is the input point.</li>
+  <li><tt>rotate</tt>: takes a double as input that represents an angle in radians, and it rotates the polygon about its center by the input angle. (Note that the rotation could change the center of the polygon.  That is okay since we are only roughly defining a center given that this polygon is completely arbitrary.)</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the Points that make up the polygon.</li>
+  <li><tt>getLines</tt>:  returns an array consisting of the Lines that make up the polyhon.</li>
+</ul></p></li>
+
+<li><p><tt>NGon</tt>: The <tt>NGon</tt> type represents regular polygon with an arbitrary number of sides.  A <tt>NGon</tt> type instance should be created with one <tt>Point</tt> representing the center of the
+<tt>NGon</tt> plus one int representing the number of sides and one double representing the side length.
+The <tt>NGon</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the center of the polygon.</li>
+  <li><tt>getSideLength</tt>:  returns the length of each side of the polygon.</li>
+  <li><tt>getNumSides</tt>: returns the number of sides of the polygon.</li>
+  <li><tt>setCenter</tt>: takes a Point as input and moves the polygon so that its center is the input point.</li>
+  <li><tt>setSideLength</tt>:  takes a double as input that is the new length of each side of the polygon.</li>
+  <li><tt>rotate</tt>:    takes a double as input that represents an angle in radians, and it rotates the polygon about its center by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the n Points that make up the corners of the polygon.</li>
+  <li><tt>getLines</tt>: returns an array containing the n Lines that make up the edges of the polygon.</li>
+  <li>Here is a "simple" way to calculate the points and/or lines.  The distance from the center of the polygon to the midpoint of a side is <em>n / (2 tan(Pi / n))</em>.  From that, you can set the end points of one side.  Then repeat for each side, of the n-gon.  Place point k twice as far away from point (k-2) as point (k-1) is, on a straight line, and then rotate that point about point (k-1) by the size of the interior/exterior angle.  The interior angle is calculated by <em> Pi (n-2) / n</em>.</li>
+</ul></p></li>
+
+<li><p><tt>EquilateralTriangle</tt>: The <tt>EquilateralTriangle</tt> type represents triangle with three equal length sides.  A <tt>EquilaterlTriangle</tt> type instance should be created with one <tt>Point</tt> representing the center of the
+<tt>EquilateralTriangle</tt> plus one double representing the side length.
+The <tt>EquilateralTriangle</tt> type should have the following methods:
+<ul>
+  <li><tt>getCenter</tt>: returns a Point that represents the center of the triangle.</li>
+  <li><tt>getSideLength</tt>:  returns the length of each side of the triangle.</li>
+  <li><tt>setCenter</tt>: takes a Point as input and moves the triangle so that its center is the input point.</li>
+  <li><tt>setSideLength</tt>:  takes a double as input that is the new length of each side of the triangle.</li>
+  <li><tt>rotate</tt>:    takes a double as input that represents an angle in radians, and it rotates the triangle about its center by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the 3 Points that make up the corners of the triangle.</li>
+  <li><tt>getLines</tt>: returns an array containing the 3 Lines that make up the edges of the triangle.</li>
+</ul></p></li>
+
+</ol>
+</p>
+
+<h4>Extra Credit</h4>
+
+<p>Create two additional types:
+
+<ol>
+<li><p><tt>SnowFlake</tt>: The <tt>SnowFlake</tt> type represents a polygon that is a snowflake-type fractal.  
+A <tt>SnowFlake</tt> instance should be created with a regular polgton (<tt>Square</tt>, <tt>NGon</tt> or <tt>EquilateralTriangle</tt>) and a <tt>int</tt> as input.  The input polygon is the <em>base shape</em> and the <tt>int</tt> is the <em>number of levels</em> of the fractal.
+The <tt>SnowFlake</tt> type should have the following methods:
+<ul>
+  <li><tt>getBaseShape</tt> returns the base shape used for the fractal.</li>
+  <li><tt>getNumLevels</tt> returns the number of levels of the fractal.</li>
+  <li><tt>setNumLevels</tt> takes an <tt>int</tt> and sets the number of levels for the fractal.</li>
+  <li><tt>getCenter</tt> returns a Point that is the center of the fractal.</li>
+  <li><tt>setCenter</tt> takes a Point as input and moves the fractal so that the input point is the new center.</li>
+  <li><tt>rotate</tt> takes a double as input that represetnts an angle in radians, and it rotates the fractal about its cetner by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the points that make up the corners of the fractal.</li>
+  <li><tt>getLines</tt>: returns an array consisting of the lines that make up the edges of the fractal.</li>
+  <li>The way you calculate the points/lines is as follows.  If the number of levels is 0, the points/lines are the same as the 
+      base shape.
+      Otherwise, you repeat for each level of the fractal. Take each line of the current fractal, and you split the line <tt>___</tt>
+      into four smaller lines that have the shape <tt>_/\_</tt>.  You do this by splitting the line into 3 equal pieces, and
+      then rotate the middle piece by 60 degrees, creating <tt>_/ _</tt> and finally adding one more segment in to create <tt>_/\_</tt>.<p>So, a snowflake with level 0 is just the base shape.  A snowflake at level 1 is the base shape with each line <tt>___</tt>
+of the base shape replaced by <tt>_/\_</tt>.  A snowflake at level 2 take a snowflake at level 1 and replaces each
+line <tt>___</tt> with <tt>_/\_</tt>, and so on.</p></li>
+ 
+</ul></p></li>
+
+<li><p><tt>TriangleFractal</tt>: The <tt>TriangleFractal</tt> is a triangle that is drawn as a subdivision-type fractal. 
+A <tt>TriangleFractal</tt> instance should be created with a triangle (either <tt>Triangle</tt> or <tt>EquilateralTriangle</tt>) and
+  an <tt>int</tt> as input.  The input triangle is the <em>base shape</em> and the <tt>int</tt> is the <em>number of levels</em>
+of the fractal.
+The <tt>TriangleFractal</tt> type should have the following methods:
+<ul>
+  <li><tt>getBaseShape</tt> returns the triangle used for the base shape of the fractal.</li>
+  <li><tt>getNumLevels</tt> returns the number of levels of the fractal.</li>
+  <li><tt>setNumLevels</tt> takes an <tt>int</tt> and sets the number of levels for the fractal.</li>
+  <li><tt>getCenter</tt> returns a Point that is the center of the fractal.</li>
+  <li><tt>setCenter</tt> takes a Point as input and moves the fractal so that the input point is the new center.</li>
+  <li><tt>rotate</tt> takes a double as input that represetnts an angle in radians, and it rotates the fractal about its cetner by the input angle.</li>
+  <li><tt>getPoints</tt>: returns an array consisting of the 3 points that make up the outer corners of the fractal.</li>
+  <li><tt>getLines</tt>: returns an array consisting of the 3 lines that make up the outer edges of the fractal.</li>
+</ul>
+When a <tt>TriangleFractal</tt> is drawn, if the number of levels is 0, just the base triangle is drawn.
+Otherwise, 
+    <ol type="a"><li>Take the triangle that is the base shape of this fractal.</li>
+                 <li>Create three <tt>Triangles</tt>, for each <tt>Triangle</tt>, use the center point plus two of the original <tt>Triangle's</tt> endpoints.</li>
+		 <li>Create three <tt>TriangleFractals</tt> using the new <tt>Triangles</tt> as the base shapes. Each new
+<tt>TriangleFractal</tt> should have its number of levels set to be one less than this fractal.  </li>
+                 <li>Each of the three <tt>TriangleFractals</tt> is then drawn.</li>
+    </ol></li>
+</ul></p></li>
+
+</body>
+
+</html>
+

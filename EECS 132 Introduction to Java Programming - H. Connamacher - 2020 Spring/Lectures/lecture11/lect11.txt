@@ -1,0 +1,221 @@
+How Constructors Work:
+	1) The first line of a constructor must be a call to another constructor.  (This is also the only place in the code were we can have a constructor call.)
+           These are the two possibilities:
+              super() <- possibly with input in the parentheses.  This calls (i.e. executes) the constructor of the parent class (the class this class extends).
+	      this() <- possibly with input in the parentheses.  This calls a constructor of the same class.
+
+	   If you do not explicitly have a constructor call as the first line of your constructor body, Java automatically places super(), with no input, there.
+	   
+	   WHY?  Recall polymorphism.  An object of type Employee is also type Object.  An object of type GeometricFrame is also JFrame, Frame, Window, Container, Component, and Object.
+             The purpose of the constructor is to initialize the object.  Before we can initialize the objects as Employee, it must first initialize itself as Object.
+
+	2) The constructors do the following when they are run:
+	    a) The first line of the constructor that calls another constructor is executed.  (Recall that Java adds super() if you omit this line.)
+	    b) All fields of the instance are initialized.
+	    c) The rest of the constructor body is executed.
+
+   Note point (b) above.  Java basically takes any assignment statements on your fields and places that code after the constructor call that is the first line of your constructor and 
+     before the rest of the constructor code.  This is important to remember for the situations where you care about the order that things are being done in your program.
+
+
+  Let's create a class that extends Employee:
+
+	public class HourlyEmployee extends Employee {
+	}
+
+  This class will not compile as written!  The reason is that we did not write a constructor so Java provided a default constructor.
+  The default constructor takes not input and calls super() with no input.  Something like this:
+	   public HourlyEmployee() { 
+	      super();
+	   }
+
+  Now we see why HourlyEmployee fails to compile.  The first line of the HourlyEmployee constructor is super();
+    super() calls the constructor of Employee that takes no input.  But there is no constructor of Employee that takes no input.
+    The Employee constructor requires a String as input.  So, we have to have a String as a parameter to super();
+
+  One thing we could do is to create a constructor that calls 
+	super("Some Dumb String");
+  And the code will compile because the types not match.  However, this is does not fit what we want Employee to be.
+  The purpose of the Employee constructor was to require a name for each Employee.  We should write our code for HourlyEmployee
+    to follow this idea, require a name as input, and then pass this name along to the Employee constructor.
+
+  Here is the correct code.
+
+	public class HourlyEmployee extends Employee {
+
+	  public HourlyEmployee(String name) {
+	    super(name);
+	  }
+	}
+
+HourlyEmployee inherits everything from Employee:
+	> HourlyEmployee h = new HourlyEmployee("Janice")
+	> h.getName()
+	"Janice"
+	> h.getSalary()
+	0.0
+
+
+Overriding Methods
+   Since HourlyEmployee extends Employee, it inherits all the public and protected methods of Employee.
+     This means it inherited getSalary() and setSalary().
+     Hourly employees should not have a salary.  We can fixed this by "overriding" how the salary works for HourlyEmployees.
+     (A better solution would be to not have salary be a property of employees.  Instead, have a generic employee class and then create a SalariedEmployee subclass that has a salary.  But, it is often the case that we are given a class like Employee that is not perfect for what we need, but we have to adjust and work with it.)
+
+
+   The best solution in this case is to change the getSalary method.  Why? Because in O-O coding, we are trying to think like the object.  Instead of thinking about what to do to the employee, think about how the employee wants to present itself.
+    An hourly employee will want its "salary" to be its hours worked times amount paid per hour.
+
+
+	@Override
+	public double getSalary() {
+	  return hoursWorked * hourlyRate;
+	}
+
+    Now, anytime someone asks the HourlyEmployee what it makes in salary, it will respond with this formula.
+
+    However: we violated one of our O-O coding rules: we used the fields and not the getter methods in the body of getSalary().
+    
+	@Override
+	public double getSalary() {
+	  return getHoursWorked() * getHourlyRate();
+	}
+
+    We now see why that matters.
+
+RULES FOR O-O CODING:
+    1. Create private fields
+    2. Create public getter/setter methods so that classes that extends this class can change behavior if they want.
+    3. Everywhere in our code that uses a value, we use the getter/setter methods instead of the fields.
+    4. Except in the constructor where, if we want a field to be initialized, we use the field directly.
+
+O-O TYPE RULES
+    1. Every instance is many types at the same time.
+    2. The "true" type is what the instance is at creation (from: new XXX() -> the true type is XXX).
+    3. The "current" type is what the instance is typecast as at this particular part of the code.
+    4. An instance may only call methods and fields that exist for the "current" type.
+    5. However, the version of the method used is the version of the "true" type.  (This applies only to instance methods!  Fields and static methods are still used from the current type)
+
+
+  We created the method earnsMoreThan that compares the salaries of this employee to another employee.  First we created it incorrectly:
+     BAD IDEA:
+        public boolean earnsMoreThan(Employee e) {
+          return salary > e.salary;
+        }
+
+
+      This example only works with employees that have salaries.  We already have hourly employees that don't.
+       What we DO NOT want to do is to have our method have to worry about all the different kinds of employees out there:
+       That will make our method code long and tricky:
+	  if this employee is a "normal" employee, use the salary
+	  if this employee is an "hourly" employee, mulyiply hours worked times hourly rate
+	  if this employee is a "sales" employee ...
+	    (and so forth)
+	  if e is a "normal" employee, use the salary
+	  if e is an "hourly" employee, multiply hours worked times hourly rate
+	YUCK! - and what if someone else creates a new type of employee we did not consider!!!
+
+     BAD IDEA 2:
+	Let's create a salary field in HourlyEmployee and set that to be the hours worked times the hourly rate
+	This will NOT solve the problem because in earnsMoreThan, it is using the salary field of Employee, and not the salary field we just created for HourlyEmployee!
+	(Remember that the current type determines which field you access.)
+
+     The solution is to let each employee determine how the salary works.
+      Yet, we used fields in the method.  We cannot "override" a field in Java.  So each class that extends Employee will need to access and update the salary field.
+      (And each programmer will need to remember to do that!)
+
+      However, we CAN override methods.  Recall that no matter how you typecast an instance, the instance never forgets its true type, and the instance will always use it's true type's version of the method.
+      So, let us use methods instead of fields in our code:
+      
+
+        public boolean earnsMoreThan(Employee e) {
+          return this.getSalary() > e.getSalary();
+        }
+
+     Now, if HourlyEmployee wants to change how salaries work, it can by simply overriding the getSalary method.  Since the true type's version of a method is -always- used, it does not matter if the Employee is an Employee or an HourlyEmployee or some other kind of Employee.  It will use the correct getSalary version.
+
+
+
+Overriding methods of Object
+
+    Employee extends Object and inherits the methods of Object.  There are two important methods we should override because their default behavior is not very useful.
+
+   1) String toString()
+
+  This method produces a String representation of the object.  It is used anytime we need a String representation of the object such as when writing to the terminal
+    or when used with the String concatenation operator + to concatenate objects to a string.
+  The method in Object sets the string to be the true type name of the object and it's "hash code" (basically its location in memory).
+  Usually we want the string to be something more useful, so we override the method.
+
+  In our case, we want it to be the employee number followed by the employee name
+
+	public String toString() {
+	  return getNumber() + ": " + getName();
+	}
+
+
+   2) boolean equals(Object o)
+
+  This method is used to compare two objects.  If you use the == operator on non-primitive values, it is comparing the addresses of the values.  Thus, == only returns true if two objects are the exact same object.
+    For example, "Hi" == "Hi"  only returns true if the two Strings are really the same string stored at the same location in memory.  If you create a String s that contains "Hi" but is stored at a different location in memory,
+       then s == "Hi" will return false.
+  The equals method is provided to examine the contents of the object to determine if they are structurally equal.
+  However, the equals method will not compare the contents of objects by default.  The equals method in Object just does an == test.  Instead, we must override the method.
+  For example, the String class overrides the equals method to compare the individual characters of the string.  Thus  "Hi".equals("Hi") always returns true.
+
+++++++++++++++++++++++
++   IMPORTANT:  To override any method, we must exactly match the method parameter signature.  
++      Many Java textbooks and on-line references do not give the correct way to write an equals.
++      If you seach online, you will often find the suggestion to use      public boolean equals(Employee e) {
++	 but this does not match the parameter signature of the method in Object, and so it is overloading, and not overriding! 
++
++       The problem with overloading is that we can change the version of the method we call by typecasting:
++
++	   Employee e1 = new Employee("Mekayla");
++	   Employee e2 = new Employee("Mekayla");
++
++       So, if we did not write the equals method as above: public boolean equals(Object o), but if we instead
++        did as many books and web pages suggest:   public boolean equals(Employee e) 
++       we will have the problem that:
++	   e1.equals(e2)  and   e1.equals((Object)e2) will call different versions of the method!  One for input Employee, and one for input Object.
++          This is bad because we don't want the behavior to change just because the current type of the object changes.
++           (In fact, the first would return true, and the second will return false!)
+++++++++++++++++++++++++
+
+
+   Because overriding is such an important idea in Java and because it is easy to make a mistake and accidentally overload instead of override, the Java compiler
+    provides an "annotation" we can add to the code.  An annotation is not part of the Java language, but it is a directive to the compiler.
+    This particular annotation is @Override, and if we place it before a method that is overriding an inherited method, the compiler, upon seeing the annotation,
+    will verify that we really are overriding.  If we are not, it will give a compiler error instead of allowing the overload.
+
+   A correct equals method that says this Employee is equal to the input if the input is an Employee with the same employee number:
+
+	@Override
+        public boolean equals(Object o) {
+          if (o instanceof Employee) {
+            Employee e = (Employee)o;
+            return this.getEmployeeNumber() == e.getEmployeeNumber();
+          }
+          else
+            return false;
+        }
+
+   instanceof:  returns true if object that is the left operand can be typecast as the type that is the right operand.  (I.e. is the object's true type equal or "below" the given type in the hierarchy.)
+   If we do not use instanceof, the method will generate a TypeCastException when typecasting a non-Employee to Employee.
+
+
+   This equals method has overridden the inherited equals method.  And now there is only one version of equals available to Employee, and no matter how Employee is typecast,
+	it will always use this version of the method.
+
++++++++++++++++++++
++     IMPORTANT: Some Java resources suggest using the getClass() method of Object instead of instanceof, but that is not as nice a solution because getClass returns the true type
++	and we will then be limiting our code to only run on objects with true type Employee.  As a result, it won't work with HourlyEmployee!
++
++      In general, we want to code using the current type as much as possible and ignoring the true type.
++++++++++++++++++++
+   
+
+  Since HourlyEmployee extends Employee, HourlyEmployee gets these new overridden versions of toString and equals, and it does not get the versions of Object.
+    That is really convenient!   
+
+

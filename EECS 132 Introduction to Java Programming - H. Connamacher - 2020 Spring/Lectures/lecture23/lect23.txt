@@ -1,0 +1,88 @@
+Non-primitive Types:  Classes, Abstract Classes, and Interfaces
+
+  Classes and abstract classes can form a "class hierarchy" that is a tree.
+    An abstract class can contain everything a class can contain plus abstract methods.
+    You can't directly instantiate an abstract class.
+
+  An interface adds to the hierarchy, but outside of the "class hierarchy tree".
+    Interfaces can contain
+      - static methods
+      - static final fields
+      - static nested classes
+      - most importantly, public abstract instance methods
+
+     In Java 8, interfaces can have "default" method bodies for their abstract methods.  When a class inherits the method stub / abstract method, if the class does not already have a method (or abstract method) of that name, the Java compiler
+   will create the overloaded method for you automatically and textcopy the default method body into the code.  This is NOT the same as inheriting the method.
+
+
+Polymorphism
+
+  Review of key ideas:  An object is many types at the same time: its true type plus all types that the true type extends
+                         or implements.
+			An object's true type is what it is when created  (new MyClass() creates an object with true type MyClass)
+  			An object's current type is whatever it is currently being used as via typecasts or Java's type rules
+			The compiler verifies that you are using the current type properly
+				- You can only access fields available to the current type
+				- You can only call a method with a name and parameter signature that exists in the current type
+			The true type determines what method version is actually run.
+
+  Review of creating a hierarchy:
+    We can use classes, abstract classes, or interfaces.
+    Classes and abstract classes form the "main" hierarchy that is a tree.
+    Interfaces are used when we need to model ideas that do not fit into a tree.
+    1) "is-a":  If A "is-a" B then A and B are non-primitive types where A extends or implements B.
+      - if A is not a B, then we do not relate A and B in a hierarchy.
+    2) "has-a": If A "has-a" B then B is a method in A. 
+      - likewise, if A does not have a B, then we do not put B into A.
+
+  Generally, try to get most of your hierarchy into the class tree uses classes and abstract classes.  
+    This way you can take full advantage of instance method inheritance including instance fields.
+  Where things don't fit nicely into a tree, you use interfaces.
+    Using interfaces generally requires a little more coding to get the inheritance to work because interfaces can't have instance fields. 
+
+  Review or rules for writing good O-O code:
+	1) Make fields private
+	2) Create public (or protected) getter/setter methods for the fields (if we want access to them)
+	3) Anywhere other than the constructor that we use the fields, we do not use the fields themselves, but we use the getter/setter methods.
+        Additional note: we avoid duplicating fields or storing data in multiple places
+                         we avoid writing duplicate code
+
+  Why do we make fields private and have public (or protected) getter/setter methods?
+	So we can control how an object of a class behaves.  We indicate that all direct access should be through the methods, and we can override the methods if we need to change behavior.
+	We lose this control if the fields are not private.
+
+  Why must we use the getter/setter methods and not the fields in all methods (except the getter/setter methods themselves and the constructors)?
+
+    Suppose a programmer decides to add more methods to Rectangle:
+
+	public void doubleLength() {
+	  length *= 2;
+	}
+
+    Now, what happens to Square:
+
+	Square s = new Square(5);
+	s.doubleLength()
+	s.getWidth()    => 5
+        s.getLength()   => 10
+        s.area()        => 50
+
+	Square stopped working!
+
+   The solution is -not- to override doubleLength inside Square.  That would mean Square may have to override all methods of Rectangle. 	
+   The problem is Rectangle.  We need to use the getter/setter methods and not the fields.  Then no matter what we do to Rectangle, Square will still work perfectly.
+
+	public void doubleLength() {
+	  setLength(2 * getLength());
+	}
+
+    Now:
+	Square s = new Square(5);
+	s.area()      => 25
+	s.doubleLength();
+	s.area()      => 100
+	s.getWidth()  => 10
+        s.getLength() => 10
+
+   This is the power of polymorphism!  We don't have to rewrite Square with every change to Rectangle!  But we get this power as long as we code correctly.
+

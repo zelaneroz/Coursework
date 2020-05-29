@@ -1,0 +1,257 @@
+
+Creating a Class Hierarchy
+
+Abstract Classes:
+ An abstract class fits into the class hierarchy with normal classes.
+ An abstract class contains everything a class can contain, plus it can contain abstract methods.
+
+ An abstract method is a method with no body (i.e. it is a method stub).  All classes inherit the abstract method, but unless the class is abstract, it must override the abstract method to give it a body.
+
+
+ We created an abstract class Shape.
+ We created an abstract class Polygon that extends Shape
+ We created a normal class Rectangle that extends Polygon.
+
+ One important point:
+    When using fields in our class, we used the getter/setter methods instead of the fields directly:
+
+	public class Rectangle extends Polygon {
+	  private double width;
+	  private double height;
+
+	  public Rectangle(double width, double height) {
+	    super(4);
+	    this.width = width;
+	    this.height = height;
+	  }
+
+	  public double getWidth() {
+	    return width;
+	  }
+
+	  public void setWidth(double width) {
+	    this.width = width;
+	  }
+
+	  public double getHeight() {
+	    return height;
+	  }
+
+	  public void setHeight(double height) {
+	    this.height = height;
+	  }
+
+	  @Override
+	  public double area() {
+	     return getWidth() * getHeight();
+	  }
+	}
+
+   Note that we had to override the area method because the method Rectangle inherited was abstract.
+   A normal class cannot contain an abstract method.
+
+   Note that we are using the getter methods inside the body for area.  Doing so will make our work for Square (and any other class that extends Rectangle) a lot simpler.  
+
+   Square will not have to change how area is computed because Square will simply override the getter and setter methods to make sure that a square has the same width as length. 
+   In addition, because we used the getter methods for width and height instead of the fields, we have complete flexibility in choosing how to override methods to force Square to have the same size and width.
+
+   Here is one way: force the width and height to be the same value, and any time you change one, you change the other. 
+
+	public class Square extends Rectangle {
+	  public Square(double length) {
+	    super(length, length);
+	  }
+
+	  @Override
+	  public void setWidth(double width) {
+	    super.setWidth(width);
+	    super.setLength(width);
+	  }
+
+	  @Override
+	  public void setLength(double length) {
+	    this.setWidth(length);
+	  }
+	}
+
+     Here is another way: use only the width for the Square size and ignore the height.
+       So, now, if someone asks for the height of a square, we give them the width.
+
+	public class Square extends Rectangle {
+	  public Square(double length) {
+	    super(length, 0);     // the second number does not matter because we are ignoring the height attribute
+	  }
+
+	  @Override
+	  public double getHeight() {
+	    return getWidth();
+	  }
+
+	  @Override
+	  public void setHeight(double height) {
+	    setWidth(height);
+	  }
+	}
+
+
+   Which Square class is better?  Neither!  They both work the same.  However, note that if we had Rectangle's area method use "length * width" instead of "getLength() * getWidth()", then Version 2 would not work!
+    That does not mean Version 1 is better because there are other things we could have done in Rectangle using fields instead of methods that could have broken Version 1 as well.
+ 
+
+SUMMARY: IMPORTANT RULES FOR PROPER OBJECT-ORIENTED PROGRAMMING IN JAVA
+   1. Form a hierarchy using the "is-a" and "has-a" rules.
+   2. "is-a":
+      2a. If type B "is-a" type A, then we make B extend A.  You must be sure that everywhere type A is used type B can also be used.  If that is not true, then B is not also type A.
+	  For example, we can use Square anywhere Rectangle is expected, and it makes sense.  Likewise, we can use Square and Rectangle anywhere that expects a Shape, and that makes sense.
+	  It would not make sense to use Triangle anywhere that expects a Rectangle.
+      2b. If B extends A, then B should add features to A or restrict features of A.  B should not block or remove features of A.
+	  Square does not block the ability to change the width or length of Rectangle, but it restricts the change so that both dimensions change together.
+   3. "has-a":
+      3a. Use "has-a" to decide on the methods for the class, and push common methods as high up the hierarchy as possible.
+      3b. Use private fields to store the data and public or protected getter/setter methods as needed.
+      3c. Do not save the same information multiple times.  Remember that all fields of the class and parent classes exist in the object.  Use the getter/setter methods to access the values of the parent class.
+   4. Outside of the constructors, always use the getter/setter methods instead of the fields when accessing values of an object.  
+      This will allow any classes that extend your class to easily override methods to specify necessary behavior.
+      (If you do not want public getter/setter methods, then at least use protected ones.)
+   5. Do not use getter/setter methods inside the constructor.  The purpose of the constructor is to initialize the object correctly, and if you use methods, a class that extends your class could override the
+      methods and accidentally break how your class works by preventing proper initialization of the instance.
+
+
+
+Multiple Inheritance
+
+  Some object-oriented languages such as C++ allow a class to have more than one parent.  For example, class C can extend both classes A and B.
+   This means C will inherit methods from both A and B.  What if both A and B have a method m(), and inside class C we call method m()?  Whose method is called, A's or B's?
+   This becomes really tricky if A and B both extend a super class X.  Suppose X has method m() and A and B both override m().
+   Now consider:  X x = new C();
+     x has current type X so x.m() is a legal method call.
+     But the true type C determines which version of m is called.  So which version is it, A's or B's?
+
+  In Java, each class can only extend one other class.  Thus there is no ambiguity.  We can get something like multiple inheritance by allowing a class to implement more than one interface.
+
+Why Do We Need Multiple Inheritance?
+
+  Consider the Shape hierarchy from the last lecture.
+  What if we want to add a RegularPolygon to the hierarchy?
+    A RegularPolgon is-a Polygon
+    A Square is-a RegularPolygon
+    A Rectangle is not a RegularPolygon
+    A Hexagon is a RegularPolygon
+
+  There is no way to correctly place RegularPolygon in the tree hierarchy for the classes and have all the "is-a" relations correct.
+
+  Instead, let use create RegularPolygon as an interface.
+  Now, we can have classes like Octagon and Hexagon extend Polygon, and have Octagon, Hexagon and Square "implement" RegularPolygon.
+
+
+Java Interfaces
+
+  A Java interface is a non-primitive type like a class, but it cannot contain instance methods, fields, or constructors.
+
+    Specifically, an interface can contain:
+      - static fields
+      - static nested types
+      - static methods
+      - abstract public instance methods (method stubs)
+      - starting in Java 9, private methods will be allowed
+
+   The main purpose is to contain public abstract methods.
+
+   Starting in Java 8, the abstract public instance methods can also have a default body.
+	If a class inherits an abstract method with a default body and does not override the abstract method,
+         Java automatically overrides the method using the code from the default body.
+
+  To create an interface:
+
+        public interface MyInterface {
+          void methodStub1(int x, int y);
+
+          int methodStub2();
+        }
+     (since all methods stubs in an interface have to be public and abstract, we can drop the "public abstract" part)
+
+  An interface can extend 0 or more interfaces.  (You place "extends ..." just like you do with a class, and for multiple interfaces, you separate them with commas.)
+
+   
+  To use an interface in a class: a class can implement 0 or more interfaces.
+
+	public class MyClass implements MyInterface {
+	   // here MyClass inherits the abstract methods methodStub1 and methodStub2
+           // because a class cannot have abstract methods, we must override these method stubs with methods with bodies
+	}
+
+   Here is another example:
+
+        public class Square extends Rectangle implements RegularPolygon {
+          ....
+        }
+
+  If you will implement more than one interface, separate the interface names with commas.
+  Implementing an interface is -exactly- like extending a class.
+  So, a class that implements an interface inherits all the methods (or in this case method stubs) of the interface.
+  A class (that is not abstract) cannot contain method stubs.  So, the class must override each of the method stubs from the interface.
+
+  Note how this simplifies the multiple inheritance problem above.  A class may inherit a method stub from more than one parent, but it can only inherit an instance method that contains a body from its class parent.  
+
+
+  NOTE: Students tend to get mixed up on "extends" vs. "implements".  They mean exactly the same thing. 
+    Java uses "implements" for the specific situation where we are indicating that a class as an interface as a supertype.
+    All other situations where we are indicating a supertype, we use "extends".
+
+
+Interface Example
+
+  We created the RegularPolygon interface
+
+	public interface RegularPolygon {
+
+   The point of the interface is to let us write the code to compute the area of a regular polygon.
+   Let's do it as an abstract instance method with a default body.
+   To compute the area, we need to know the number of angles and the length of a side.
+   To make sure those values exist, we create method stubs for them.
+
+	public interface RegularPolygon {
+
+	  int getNumSides();
+
+	  double getSideLength();
+
+	  default double areaOfRegularPolygon() {
+	   ... a formula using the.getNumberAngles() and this.getSideLength()
+	}
+
+   Now, anything that is a RegularPolygon will inherit the getNumberAngles and getSideLength method stubs and (if not an abstract class),
+     must override them to make them normal methods.
+
+   Notice one trick I used.  Polygon already has getNumberAngles as a normal method.  So, anything that implements RegularPolygon will
+     already get a normal getNumberAngles method inherited from Polygon and so will not have to override the method stub.
+   The classes that implement RegularPolygon will still have to override the getSideLength method stub.
+
+
+We ran out of time, but here is the full example for Hexagon:
+
+	public class Hexagon extends Polygon implements RegularPolygon {
+
+	    private double sideLength;
+
+	    public Hexagon(double sideLength) {
+	      super(6);
+	      this.sideLength = sideLength;
+	    }
+
+	    public double getSideLength() {       <-- this method is required by RegularPolygon 
+	       return sideLength;
+	    }
+
+	    public void setSideLength(double sideLength) {
+	       this.sideLength = sideLength;
+	    }
+
+	    public double perimeter() {       <- this method is required by Shape
+	      return getNumberAngles() * getSideLength();
+	    }
+
+	    public double area() {            <- this method is require by Shape, but we have a static method in the interface for the area
+	      return this.areaOfRegularPolygon(); 
+	    }
+	}

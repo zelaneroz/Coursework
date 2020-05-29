@@ -1,0 +1,102 @@
+Nested Classes and Anonymous Classes
+
+  A nested type is a type defined inside another type.  A nested class is a class defined inside another class. 
+  This lecture will focus on nested classes, but everything holds for interfaces and abstract classes as well.
+  A class inside a class is a member of the containing class.  Just like methods and fields, it can be public or private (or package or protected), and static or non-static.
+  The rules for accessing a nested class are essentially the same as for accessing a field.
+  When a class extends a class with a nested class, the rules are the same as for fields.
+
+  A nested class goes into the heap just as normal classes do.  A nested class contains everything that normal classes do plus they have access to the elements of the containing class.
+   A static nested class has access to the static fields and methods of the containing class.
+   A non-static nested class also has access to the instance fields and methods of the containing class.
+  Nested classes go into the hierarchy the same as other classes.  The only real difference between a nested class and a "normal" class is where it is located.
+
+Static Inner Classes
+
+Example 1: A public static nested class
+  We first created a public static nested class for our event handler.
+  
+	public static class RotateClick implements EventHandler<ActionEvent> {
+	   .... some code here ....
+	}
+  To create an instance of the nested class RotateClick from outside the Button4GUI class, we can use exactly the same Java terminology we use to create other objects and to access static fields and methods:
+
+	Ex: to access a static field, we use classname.field so to access a static nested class we use outer_classname.nested_classname
+	To create an instance, we use new.
+
+	Button4GUI.RotateClick c = new Button4GUI.RotateClick();
+
+  Generally, static nested classes are useful, but in this case, we wanted access to the text area of the ButtonGUI.  That requires access to the object, but the static nested class belongs to the class and not to the object.
+
+Non-static Inner Classes
+
+Example 2: A non-static nested class
+  Next, we made SpinClick to be a non-static nested class that implements EventHandler.
+  By making the nested class non-static, the nested class has access to all of the non-static fields and methods of the containing class.
+
+	public class SpinClick implements EventHandler<ActionEvent> {
+	   .... necessary code here ....
+	}
+
+  As a non-static nested class, the class belongs to the object.  So, we can access the non-static fields and methods of the object.
+
+	public class SpinClick implements EventHandler<ActionEvent> {
+	   public void handle(ActionEvent e) {
+	     button1.setRotate(button1.getRorate() + 10);
+	   }
+	}
+	
+  Two issues with non-static nested classes.  The first (which I did not cover in lecture) is that there are two "this" values active.  "this" refers to the object of the nested class:
+	this.button1.setRotate(   
+    will give an error because button1 is not a field of the nested class, it is a field of the outer class.  The other this is "Button4GUI.this".
+	Button4GUI.this.button4.setRotate(
+    is correct.
+    Or, we can just use 
+	button1.setRotate(
+    and have Java automatically add the correct this.
+
+  We can also access the nested class from outside the containing class (since it is public).
+  The key thing to remember for a non-static nested class is that, just as with non-static fields, you have to create an instance of the containing class before you can create an instance of the nested class.
+    The syntax is a little weird when you are outside the containing class:
+	Button4GUI app = new Button4GUI();
+	Button4GUI.SpinClick l = app.new SpinClick();
+
+  For our final version, we made the nested class private.
+  By making the nested class private, it cannot be (directly) accessed by code outside of the Button4GUI class.
+     As a result, we are indicating that this event handler only belongs with the Button4GUI class.
+
+Anonymous Classes:
+  An anonymous class is one defined in the new expression that is creating the instance of the class.
+
+     new InterfaceToImplement() {  code to override the various methods here };
+
+  or 
+     new ClassToExtend() {  code to extend the class by overriding methods here };
+
+Note, that you should not create new methods when writing an anonymous class, but you should just override existing methods.
+To see why, think about the polymorphism rules.  What is the current-type of an instance of the anonymous class?
+
+  In ButtonGUI, we created an anonymous class for another button's event handler
+
+	    button3.setOnAction(new EventHandler<ActionEvent>)() {   // create an instance of an anonymous class
+	      @Override                                              // that implements the interface EventHandler
+	      public void setOnAction(ActionEvent e) {               // Here we must override the abstract method
+		.... necessary code here ....
+	      }
+	    });
+
+  The value passed into the setOnAction method is the instance of a class that implements the EventHandler interface. 
+  This class has no name, but because it is an EventHandler, we can use this instance anywhere that expects an EventHandler.
+
+  Anonymous classes are very useful when we only need to create a single instance of a class and we are only overriding methods.
+  In these cases, why should we create a separate public class file when we can just define the class where needed in the code?
+
+  Because the anonymous class is created at a specific line of code, it has access to everything available at that line.
+  For example, if you create the anonymous class inside a method, it will have access to the local variables of the method.
+  However, this can create a problem because local variables are allocated from the stack while the instance of the anonymous
+  class is allocated from the heap.  Thus, when the method ends, the anonymous class still exists but those local variables are gone.
+  So, if you want an anonymous class to use a local variable, that variable must be declared "final".
+  Recall that a "final" variable is a variable that will not change values.  Thus, Java can safely copy the value of the variable to another 
+  location that is not the stack. There will be no chance that the variable value will change.
+  If a final variable is not appropriate, then you need to change the local variable to a field so that it can be stored in the heap.
+

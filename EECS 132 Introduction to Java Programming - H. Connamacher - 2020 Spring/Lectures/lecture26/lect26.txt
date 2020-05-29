@@ -1,0 +1,59 @@
+Continuing from Last Lecture:
+
+  How about removing an element at the the front? 
+
+	public T removeFromFront() {
+
+    We need to move the front from the current node to the next node.
+    But before we do that, we should save the value stored in the front so we can return it at the end.
+
+	public T removeFromFront() {
+	  T save = getFirstNode().getElement();
+	  setFirst(getFirstNode().getNext();
+	  return save;
+	}
+
+    But, what if the list is empty, then the front will be null, and we will get a NullPointerException!
+      It is not a good idea to throw a NullPointerException because that will not mean anything to the programmers who are using our code.
+      The problem is that the list is empty.  That should not have to deal with a null value that is specific to our implementation of the linked list.
+      We will still throw an exception, but now we will throw a more meaningfully named exception:
+
+	public T removeFromFront() throws NoSuchElementException {
+	  if (isEmpty())
+	    throw new NoSuchElementException();
+	  else {
+	    T save = getFirstNode().getElement();
+	    setFirst(getFirstNode().getNext());
+	    return save;
+	  }
+	}
+
+	public boolean isEmpty() {
+	  return getFirstNode() == null;
+	}
+
+
+
+Linked Lists and Loops
+
+   Looping through a linked list has its own special form.
+   We need a "node pointer" to point to remember where we are in the list.
+   We also need to decide if we should end pointing to the last node of the list, or after the last node of the list.
+
+
+   Example, create a method inside LinkedList that returns the number of elements stored in the list.
+
+	public int length() {
+	  int count = 0;
+	  LLNode<T> nodeptr = getFirstNode();
+	  while (nodeptr != null) {
+	    count++;
+	    nodeptr = nodeptr.getNext();
+	  }
+	  return count;
+	}
+
+  Notice the behavior of the above code:  we start the nodeptr at the first node of the list, and each time through the loop,
+    we increment the node pointer to the next node of the list.
+
+

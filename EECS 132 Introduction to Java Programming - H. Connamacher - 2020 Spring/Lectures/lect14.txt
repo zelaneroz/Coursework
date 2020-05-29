@@ -1,0 +1,148 @@
+Designing Good Loops, part 1.
+
+Loop example:
+  Write a method that determines if an English string is a palindrome.
+   - we will say that a string is a palindrome if
+      1) non-letters are ignored
+      2) letter capitalization does not matter
+      3) the remaining characters read the same forwards as backwards
+   ex:  "Madam, I'm Adam."
+
+  This problem is a little harder than the ones done previously.  We will first look at some possible algorithms, but it turns out that the best, and simplest, algorithm is not
+   going to be the first ones considered.  Often, it is a good idea to think through the benefits and disadvantages of different possible algorithm and to try to improve the algorithm
+   before writing code.
+
+Here are three of the algorithms proposed by the students in lecture:
+ Proposed algorithm 1:
+  1) Create a new String (or StringBuilder) that removes all non-letters
+  2) Make every letter upper case
+  3) Do the isPalindrome logic or method from last class
+
+ Proposed algorithm 2:
+   The same as algorithm 1 but make every letter lower case
+
+ Proposed algorithm 3: 
+  1) have two indeces, one at the front and one at the back
+  2) Repeat:
+	2a) Repeat: until the first index points at a letter, increment it
+	2b) Repeat: until the second index points at a letter, decrement it
+        2c) Compare the letters at the two indeces, and return false if they don't match and increment/decrement the indeces otherwise
+
+ Proposed algorithm 4:
+  1) Remove all non-letters
+  2) Reverse the string
+  3) Compare the string to the reverse string.
+
+**********************
+*  What we want for a good algorithm:
+*   - Time and space efficiency:
+*      Do not use more memory that is needed, do not make more traversals of the String than needed.
+*        (We have to be a little careful when counting traversals because two traversals that do one operation at each step is the same as one traversal that does two operations in each step.)
+*  
+*   - Logical simplicity
+*      The loop should do one logical task.  If we need two different tasks, we should use separate loops for each.
+*  
+*   - Simple iterations
+*      The loop should do a single iteration with each step.
+************************
+
+Problems and advantages of algorithm 1, 2, and 4:
+  The algorithms are simple with each loop doing one task.
+  The algorithms create extra, unnecessary Strings.
+  The algorithms use multiple traversals of the String.
+
+  Algorithms 1 and 2 are very similar.  Here is imporved code for algorithm 1 that combines the first two steps:
+
+	StringBuilder b = new StringBuilder();
+ 	for (int index = 0; index < s.length(); index = index + 1) {
+	  if (Character.isLetter(s.charAt(index))
+	    b.append(Charater.toUpperCase(s.charAt(index)));
+	}
+	return isPalindrome(b.toString());
+
+  How much extra memory did it use?  It created one new StringBuilder plus one new String (the toString method).  So, it needed more memory equal to twice the length of the string.
+   (Note that if we used the + operator instead of StringBuilder, we would need more memory that is equal to the square of the length of the string!)
+
+Problems and advantages of algorithm 3:
+  The algorithm does not create any extra space and does one traversal of the string
+  Each inner loop does 1 task, and the outerloop then does essentially one task.
+  However, the increment, from the point of view of the outer loop, is complex because the indeces will change by arbitrary amounts each iteration
+
+        for (int front = 0, back = s.length() - 1; front < back; front = front + 1, back = back - 1) { 
+	   // repeat until front hits a letter
+	   while (!Character.isLetter(s.charAt(front))
+	     front = front + 1;
+	   while (!Character.isLetter(s.charAt(back))
+	     back = back - 1;
+	   // now test the two characters
+           if (Character.toUpperCase(s.charAt(front)) != Character.toUpperCase(s.charAt(back))
+              return false;
+	}
+
+    BUT THIS CODE IS NOT RIGHT!!!   IT WILL CRASH
+	We need to add extra conditions in the each while and in the test!
+	We have to make sure each while does not move the index outside the string or s.charAt(..) will return an error.
+	We need to make sure, when we test the two charaters after the while loop, that we are testing two letters.  Maybe either while loop halted because we reached the end of the string.
+
+   The point is: because we do not have all the loop increment information inside the for loop header, the writing the algorithm has become much more complicated.
+
+   Recall, though, that this code did have the advantage of a single traversal and no extra memory created.
+     So a good algorithm will keep those features but do only a simple increment at each step
+
+Here is a better algorithm that keeps the same general logic as algorithm 3 but uses simple increments:
+  1) Have two indeces, one at the front and one at the back.
+  2) Repeat until done:
+     2a) If the first is not a letter, move the index up one and repeat 2
+     2b) Otherwise if the second is not a letter, move the index down one and repeat 2
+     2c) Otherwise if both match, move both indeces one character
+     2d) Otherwise we have letters that do not match and we can return false.
+
+  This algorithm uses no extra space and does a single traversal of the String.
+  The algorithm is logically simple because we are still doing one task: comparing each letter at the front to the corresponding letter at the rear.
+  The loop has a simple organization because each index will increment or decrement AT MOST once each iteration, and at least one will change.
+  Since either the front or end index changes, it is easy to logically reason that our loop will eventually terminate.
+
+
+  public static boolean isEnglishPalindrome(String s) {
+    int front = 0;
+    int back = s.length() - 1;
+    
+    while (front < back) {
+      if (/* the front is not a letter */)
+        front = front + 1;
+      else if (/* the back is not a letter */)
+        back = back - 1;
+      else if (/* the two letters do not match */)
+	return false;
+      else {
+        front = front + 1;
+        back = back - 1;
+      }
+    }
+    return true;
+  }
+
+
+To check if things are letters and to capitalize, etc, we can either write the math code from last lecture or
+  we can use the API.  There is no difference in terms of simplicity or efficiency.
+
+  public static boolean isPalindrome(String s) {
+    int front = 0;
+    int back = s.length() - 1;
+    
+    while (front < back) {
+      if (!Character.isLetter(s.charAt(front)))
+        front = front + 1;
+      else if (!Character.isLetter(s.charAt(back)))
+        back = back - 1;
+      else if (Character.toUpperCase(s.charAt(front)) != Character.toUpperCase(s.charAt(back))
+	return false;
+      else {
+        front = front + 1;
+        back = back - 1;
+      }
+    }
+    return true;
+  }
+
+

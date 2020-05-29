@@ -1,0 +1,235 @@
+
+We began with student questions on typecasting objects and widening with classes.
+
+  Our GeometricFrame is defined as:
+
+	public class GeometricFrame extends JFrame {
+
+  This means that GeometricFrame is a specialized form of JFrame.
+    To Java, that makes JFrame "wider" (or more general) than GeometricFrame, and GeometricFrame "narrower" (or more specific) than JFrame.
+    Also, note that every JFrame is a GeometricFrame but not every JFrame is a GeometricFrame.
+  Here are some examples:
+
+	GeometricFrame f1 = new GeometricFrame();
+	JFrame j1 = new JFrame();
+
+	GeomtricFrame f2;
+	JFrame j2;
+
+	Is this legal?
+	   j2 = f1;
+ 	Yes!  j2 is type JFrame, f1 is type GeometricFrame, JFrame is "wider" than GeometricFrame, and Java allows automatic widening.
+
+	Is this legal?
+	   f2 = j2;
+	No!  f2 is type GeometricFrame and j2 is type JFrame. Java does not allow automatic narrowing.  You have to use a typecast.
+
+	Is this legal?
+	   f2 = (GeometricFrame)j2;
+	Sometimes.  In this specific case (where we assigned f1 to j2), then it is allowed because we have an explicit typecast to convert the JFrame to GeometricFrame, and the object stored in j2 is a GeometricFrame.
+
+	Is this legal?
+	   f2 = (GeometricFrame)j1;
+	Sometimes.  In this specific case it is not because the JFrame stored in j1 is NOT a GeometricFrame.
+
+	So typecasts are sometimes legal and sometimes not.
+	This is the purpose of the instanceof command in Java.  It tells you if an instance is allowed to be typecast.
+
+	   j1 instanceof GeometricFrame    => returns false
+	   j2 instanceof GeometricFrame    => returns true
+
+    What about methods after typecasting?
+	For exmaple:
+	  JFrame j2 = new GeometricFrame();
+
+	  Can I call j2.transpose()?
+
+	Java is strictly typed which means you Java only allows you to do operations legal for the type you decide.
+	In this case, you decided that the GeometricFrame object will be typecast to type JFrame, so Java will hold you to the JFrame type.
+	Since JFrame does not have a transpose() method, you cannot use it for any object typecast to JFrame.
+
+
+Another example of a method, and a reminder of typecasting
+
+  We added another feature to GeometricFrame:  scale is a method that takes a scaling factor and scales the size of the window.
+
+ 	public void scale(double factor) {
+
+  We need the input to indicate how much to scale the window.  We need it to be double so we can input values like 1/2 as well as values like 2.
+
+  Now, we change the height and width, but there is an error below:
+
+	public void scale(double factor) {
+	  int newWidth = this.getWidth() * factor;
+	  int newHeight = this.getHeight() * factor;
+
+	  this.setSize(newWidth, newHeight);
+	}
+
+   It looks okay because it gets the dimensions of the window, changes the size by the factor, and then sets the size.
+   The problem is that factor is a double, and int * double is type double.  Therefore the assignments to newWidth and newHeight are type errors.
+     We can't store a double into an int variable because we can't automatically narrow a double value to int.  We need a typecast.
+
+   First attempt:
+	int newWidth = (int)this.getWidth() * factor;
+
+   Unfortunately, this is also incorrect because the typecast is being applied to just this.getWidth() and not the entire multiplication.
+   We need to use parenthesesi:
+	int newWidth = (int)(this.getWidth() * factor);
+   Here is the full solution:
+
+
+	public void scale(double factor) {
+	  int newWidth  = (int)(this.getWidth() * factor);
+	  int newHeight = (int)(this.getHeight() * factor);
+
+	  this.setSize(newWidth, newHeight);
+	}
+
+Conditional Statements, Strings, Fields, and Overriding Methods.
+
+  In the last example that we started, and will finish in our next lecture, an example that requires new knowledge of conditional statements, the String class, and "overriding" inherited methods.
+
+  Our task: create a method that puts the dimensions of the window on the title bar of the window.
+     Here is our start:
+
+	public void showSizeOnTitle(boolean show) {
+	  // if show is true, we add the size to the title and if show is false, we remove the size from the title
+	}
+
+   To do a task that depends on the value in show, we need a conditional statement.
+
+======================
+1) Conditional statements
+        if (condition)
+           then-statement
+        else
+           else-statement
+
+     condition is an expression with a boolean type
+     then-statement and else-statement can be either simple or compound (but they must be a single statement)
+     The "else else-statement" part is optional.
+
+     How it works:
+        1) the condition is evaluated
+        2a) if the condition is true, the then-statement is executed
+        2b) if the condition is false and the else-statement exists, the else-statement is executed
+	3) the next statement of the program is executed
+====================
+
+  Let's add the conditional statement to our method:
+
+	public void showSizeOnTitle(boolean show) {
+	  if (show) 
+	    // add the size to the title
+	  else
+	    // remove the size from the title
+	}
+
+   Notice that we used "if (show)" and not "if (show == true)".  Both are correct but the first is better.
+     First, "if (show)" reads more like English.
+     Second, what if we make a typo:  "if (show = true)"?  This is valid because the result of the assignment is the value stored!
+       So, with the typo, the compiler will say our code is fine, but the condition in the if statement is now always true!
+
+   The method of JFrame that changes the titles is "setTitle"
+
+	public void showSizeOnTitle(boolean show) {
+	  if (show) 
+	    // add the size to the title
+	    this.setTitle(
+	  else
+	    // remove the size from the title
+	    this.setTitle(
+	}
+
+  The input to the setTitle method is a String.
+
+=============================
+2) The String class
+
+   String is a pre-defined class in Java and one of the most important classes.
+   Strings represent text as a sequence of characters.
+   Strings have a special means for creating instances.  While we can create instances using the new operator (just as with any class), we can also just place the desired string inside double quotes.
+        "Hello"    <- this is a shortcut to creating a new String using the appropriate sequence of characters as input.
+   Note that "Hello" acts just like the new operator, it evaluates to the address of the String object storing h,e,l,l,o.
+   We can use the object just like any other object.  We can store it
+	String s = "Hello";
+
+   +  Strings have a special operator, the + operator.  The result of + is a new String that concatenates the two operands together.
+      If one operand is not a String, an appropriate String is created (through a sequence of object creation and  method calls) before the concatenation.
+
+    Ex:   "Hello" + "there"    -> "Hellothere"
+	  "Hello " + "there"   -> "Hello there"
+          "x = " + 3           -> "x = 3"
+
+    Note: you must be careful when mixing Strings and numeric primitives with the +.  When is the + meant to be a String concatenation and when is it meant to be a normal addition?
+	"x = " + 3 + 5  will return "x = 35"  (+ is evaluated left to right)
+     but
+        3 + 5 + " = y"  will return "8 = y"
+=============================
+
+	public void showSizeOnTitle(boolean show) {
+          if (show) 
+	    this.setTitle("(" + this.getWidth() + ", " + this.getHeight() + ")");
+          else
+            this.setTitle("");
+	}
+
+  This lead to a couple problems.  the first was that it erased the title that was already on the window instead of
+   adding to the title.  We fixed that by using this.getTitle() to get the current title:
+
+	public void showSizeOnTitle(boolean show) {
+          if (show)
+	     this.setTitle(this.getTitle() + " (" + this.getWidth() + ", " + this.getHeight() + ")");
+          else
+             this.setTitle(this.getTitle());
+	}
+
+  Unfortunately, this solution keeps appending the size to the title each time it was called. 
+   We want to remember the original title without the size and then use the original title instead of this.getTitle().
+   How to we remember anything in Java?  With a variable.  What kind of variable do we need? 
+
+=============================
+3) Fields / Variables:
+   There are 4 kinds of variables, and the kind you create depends on where you create it:
+	1) class (static) fields:  the variable is stored in the class (one copy that all the objects share)
+			- class fields exist for the duration of the program.
+	2) instance (non-static) fields:  a separate variable stored in each instance of the class.  Every instance has its own version.
+			- an instance field exists as long as the containing instance exists
+	3) local variables:  a variable declared inside a method.  It exists from the moment created until the end of the compound statement it is declared it.
+	4) method parameter: the variable(s) that store an input to the method.  It exists only in the body of the method.
+
+=============================
+
+   We want to remember the original title after the method ends, so a local variable or method parameter is not the right type.
+   We want every window to remember its own original title, so we want a separate variable for each instance.
+   Thus, we want an instance field.
+
+   A field declaration is just like a variable declaration, but adds an access modifier
+
+	private String originalTitle;
+
+  Here is our next attempt:
+
+	private String originalTitle = "";    
+
+	public void showSizeOnTitle(boolean show) {
+	  if (show)
+	    this.setTitle(this.originalTitle + " (" + this.getWidth() + "x" + this.getHeight() + ")");
+	  else
+	    this.setTitle(this.originalTitle);
+	}
+
+   But when do we want to remember the original title?
+   What we really want is to remember the "originalTitle" every time the setTitle() method is called.
+   What we want is to change how setTitle works.
+
+
+=============================
+4) Overriding methods
+  Overriding methods is the technique of Java where we re-define the behavior of an inherited method.
+  We override an inherited method by writing a method that has exactly the same access modifier, return type(*), name, and input types.
+   (*) the return type can be narrower if the return type is a non-primitive
+=============================
+
+  In our next class, we will override the inherited setTitle method to remember the title assigned, and we will also override the setSize method so that we can know when the window size is changed.

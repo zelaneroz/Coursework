@@ -1,0 +1,185 @@
+More on Class Design
+
+Limiting Input Values
+  Our first example looked at the Die class. 
+  Right now, we have a field that is currentFace and public methods setCurrentFace and getCurrentFace to access them.
+  We made the field private and have the methods public because methods can be inherited and overridden.  Field's cant be.
+
+  Here is a second benefit to using methods:
+    Right now, someone can set the value of the die to be anything at all.  Such as -10 or 1000.
+    Because we have a field we can limit the value.
+    The class choice was that if we try to set the value of the field outside of the legal range, make no change.
+
+  public void setCurrentFace(int currentFace) {
+    if ((1 <= currentFace && currentFace <= this.getDieSize())
+      this.currentFace = currentFace;
+  }
+
+(Side Note:  A common practice of beginning programmers is to print messages when something goes wrong. 
+   This is almost never the correct thing to do.  We are writing code that we want to be used anywhere.
+   We want this Die class to be used in any game.  We have no idea how it is going to be used, and often the last
+   thing the game designers or players want is unexpected and unwanted messages popping up on the screen.
+   There are much better ways to deal with errors that we will cover later in the class.)
+
+
+Method overloading
+   We can create multiple methods of the same name (including constructors) as long as we give then different parameter signatures.
+     The parameter signature is the number, order, and types of the inputs.
+
+   As our first example, we created two constructors for Die.
+     The constructor:
+	public Die(int dieSize) {
+	  this.dieSize = dieSize;
+	}
+
+     and the constructor:
+	public Die() {
+	  this.dieSize = 6;
+	}
+
+    Now we have two constructor methods with the same name Die.  We have two ways to create a Die instance.
+      Java knows which one you want just by looking at the input types.
+      One constructor has parameter signature (int) while the other has parameter signature ().
+
+
+Rules for Proper Object-Oriented Coding in Java
+
+    1. All our instance fields should be private. 
+    2. For each field, if we want other code in the program to change those values, we should provide public getter/setter methods, also called accessor methods.  
+        (If you do not want public access, you can make the getter/setter methods protected.)
+    3. Anywhere that our code needs to use the field value, except inside constructors and accessor methods, we should use the getter/setter method and not the field.
+
+  The reason is how inheritance works in Java: 
+     Public and protected instance methods of a class are inherited by an extending class and can be overridden.
+     Instance methods are the only thing that can be overridden, and overriding is one of the most powerful coding features of Java.
+     By following these rules, we give the maximum flexibility for other code that uses our code.
+
+
+An example class: Employee
+  The Employee will have names, salaries, and numbers.
+
+  We use the proper Java coding:
+
+	public Employee {              // the extends Object is automatically added
+
+	  private String name;
+	  private double salary;
+	  private int number;
+
+	  public String getName() {
+	    return name;
+	  }
+
+	  public void setName(String name) {
+	    this.name = name;
+	  }
+
+	  -etc-
+
+   Note that the body of getName returns name.  We also could have written "return this.name;", and it would be exactly the same.  Java automatically prefixes "this." in front of a method call
+    or field access if you do not provide it.
+
+   Note that the body of setName has another variable (the input parameter) that is called name.  This is ok because we can distinguish the input parameter variable "name" from the field "this.name".
+    Here we have to explicity use the "this." because Java does not automatically add it.  Why?  Because there is already a variable called name, and since that declaration is closer, Java will
+    assume "name" just refers to the input parameter.
+   Why did we do the assignment?  Input parameters as well as any variable declared inside a method only exists as long as the method is run.  So once setName is done, the name variable along with
+    its contents are lost.  To keep the contents around, we copy it into the field that exists as long as the object does.
+
+
+More on Constructors:
+
+  In class, we decided that we want to require an employee to have a name and a number.  
+  However, we decided that employee numbers may be assigned automatically.
+  We do this by writing a constructor method that takes a String as input.  In writing a constructor, we lose Java's default constructor that takes no input.
+
+	public Employee(String name) {
+	  this.name = name;
+	  this.number = ????? 
+	}
+
+  How do we get the number to be assigned automatically? 
+    We need the class itself to save the last employee number we used.
+    That means we need a static field!
+
+ 	private static int lastEmployeeNumber = 0;
+	
+	public Employee(String name) {
+	  this.name = name;
+	  this.number = Employee.lastEmployeeNumber + 1;
+	  lastEmployeeNumber = number;
+	}
+
+   Notice that I did not have to write "Employee.nextEmployeeNumber".  
+     If I drop the "Employee.", Java automatically adds it for me just like it does with "this.".
+
+Overloading Example 2
+
+   Overloading is when we create another method of the same name.  This is legal as long as the parameter signature is different in each method.
+
+	public Employee(String name, double salary, int number) {    // <- an overloaded constructor with (String, double, int) as the parameter signature
+	  this.name = name;
+	  this.salary = salary;
+	  this.number = number;
+	  if (number > lastEmployeeNumber)
+	    lastEmployeeNumber = number;
+	}
+
+   We now have two constructors so we can create Employees in two different ways: with a name and a number or with a name, number, and salary. 
+   Now we can create Employee instances in two different ways, and they do different things.
+
+	Employee e1 = new Employee("Harold")  
+	Employee e2 = new Employee("Cade", 666666, 10)   <- creates an employee with name Cade, salary 666666.0 (automatically widened), and employee number 10
+
+
+  However, we do need to be careful with overloading.  Consider the following:
+
+	public Employee(String name, int number, double salary) {
+
+  This is a third constructor method.  Now we have 3 different constructors with signatures:
+	(String)
+	(String, double, int)
+	(String, int, double)
+
+  What happens now if I try to create
+	Employee e2 = new Employee("Cade", 666666, 10)  ???
+
+    The input to new (and thus the constructor) is (String, int, int).  
+     That does not match any of the constructors exactly, but Java can automatically widen int to double, but should
+     it automatically widen the first int or the second?
+     Should we match (String, double, int) or (String, int, double)????
+   There is no good answer so Java will give an error.
+
+
+Here is a summary:
+
+   Overloading is when we create another method of the same name.  This is legal as long as the parameter signature is different in each method.
+
+      For example:
+	  public int f(int x, int y) {
+	    ...
+	  }
+
+	  public int f(double x, double y) {
+	    ...
+	  }
+
+      These both have different parameter signatures.  If we call f(10, 5), Java sees (int, int), and it will look for a version of f with that
+	signature.  As a result, it calls the first version of f above.
+        If we call f(10.3, 5.0), Java sees (double, double), and it will look for a version of f that has (double, double) as its input types.
+  	As a result it calls the second version of f above.
+	If we call f(10, 5.1), Java sees (int, double), and it will look for a version of f that has (int, double).  It does not find it, but 
+	does see that if it widens the first input to double, it gets (double, double) and there is a version of f with that input.
+
+      If there are two versions of the function and both can be reached with a similar widening, Java will give an error.
+	For example, if we have 
+	   public int badf(int x, double y) {
+	      ...
+	   }
+	and
+	   public int badf(double x, int y) {
+	      ...
+	   }
+       Java can handle badf(5, 0.2) because the signature (int, double) matches the top version.
+	But if we call badf(10, 10), Java sees (int, int) and does not know if it should widen the first parameter to get (double, int) and call the second version
+	or widen the second parameter to get (int, double) and call the first version of the function.  In this case, Java will do neither and give an error.
+

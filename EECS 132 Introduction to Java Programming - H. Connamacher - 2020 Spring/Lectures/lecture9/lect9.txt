@@ -1,0 +1,249 @@
+A reminder about Java's type rules for non-primitive types:
+   A class inherits all the public and protected instance methods of its super class.
+   (It will have access to all public and protected fields and class methods.)
+
+   We can change the behavior of an instance method by overriding it.
+
+   When we create an instance of a class (called an object), that instance is many types at the same time.
+     The true type is what the instance really is as created by the new operator.
+     The class is also all the super types of the true type up to Object. (polymorphism)
+     The current type is which of these types it is acting as at this point in the code.  This is which of the types it is typecast as.
+
+	The current type determines what fields and class methods it executes as well as what instance methods it is allowed to execute.
+	The true type determines the version of the instance method that is executed.
+
+Example:
+	public class MyClass {
+	   public int myInstanceField = 10;
+
+	   public int myInstanceMethod() {
+	     return 10;
+	   }
+
+	  public static int myClassMethod() {
+	    return 10;
+	  }
+	}
+
+	public class MyNewerClass extends MyClass {
+	   public int myInstanceField = 20;
+
+	   public int myInstanceMethod() {
+	     return 20;
+	   }
+
+	  public static int myClassMethod() {
+	    return 20;
+	  }
+	}
+
+   If we typecast a value, we can change which field is used and which static (class) method is run.
+	MyNewerClass m2 = new MyNewerClass();
+	m2.myInstanceField              => 20
+	((MyClass)m2).myInstanceField   => 10
+	m2.myClassMethod()		=> 20
+	((MyClass)m2).myClassMethod()	=> 10
+    However, no matter how we typecast the value, it will always use the true type instance method
+
+	m2.myInstanceMethod()		   => 20
+	((MyClass)m2).myInstanceMethod()   => 20
+
+    Because of this, we want (as much as possible) do have all interactions with our types be through the instance methods.
+    We can control the behavior of instance methods completely.  With everything else, we lose control because other parts of the program can change how they work by typecasting.
+
+
+Proper Object-Oriented Coding in Java
+    To take advantage of the type rules of the Java language, we should follow some guidelines when writing our types.  Here are the first rules:
+     1. Any data that must be stored in a type should be stored in a private field.
+     2. Any access of the data (by code outside the class) should be implemented using a public (or protected) method.
+     3. Any other behaviors we want for our type should be implemented using public methods.
+     3. Anytime we want to access the field (other than in a constructor), we should use the public method instead of the field.
+
+In today's lecture we will building a class from "scratch" in that it only extends Object
+  We will learn about:
+	1) Constructors
+ 	2) Fields
+	3) Getter/Setter methods
+	4) final
+
+Building a Class From Scratch
+  This lecture looks at the Die class from Section 4.1 of the Lewis textbook and improves it slightly.
+
+  If we want to model a game die, we need to create a class, and we need the properties of:
+    1) rolling a die
+    2) getting a die face / value
+    3) setting the die face
+    4) setting the size of the die
+  For each behavior/property, we need to create an appropriate method. 
+
+  What information will we need to remember for the die:
+    1) the current face value (we have to remember the result of a roll)
+    2) the size of the die (maybe we want a 4-sided die, a 6-sided die, etc.)
+
+   What should the class extend?  If there is nothing in the API that matches the Die type, we should just extend Object.
+     Note: do NOT extend a class unless it makes sense to say Die "is a" ... for the class you are extending. 
+       Ex: If Die extends JFrame, then we are saying that all game dice are JFrames.  That would indeed be bizarre.
+
+	public class Die extends Object {     // if we do not include "extends Object", Java will do that by default
+
+  	}
+
+    Now, we deal with die value (the face showing after we roll).
+       We need to remember what the value is.  Remembering a value requires a field.
+       We want to let other code read and change the value of the field.  For optimal O-O behavior, this access should be through methods. 
+
+        /* stores which face of the die is showing.  i.e. what the value of the roll is */
+	private int currentFace;
+
+	/* returns the current face value */
+	public int getCurrentFace() {
+	  return currentFace;
+	}
+
+   Notice that we wrote "currentFace" instead of "this.currentFace".  Both are allowed.  If we do not include the "this.", Java adds it automatically.
+
+        /* sets the value of the die */
+	public void setCurrentFace(int currentFace) {
+	   ????
+ 	}
+
+    Here we have a problem.  There is the variable currentFace that is an instance field of the class, and also the variable currentFace that is a method parameter.
+      We want to copy the data from the method parameter to the instance field, but both have the same name.
+      This looks strange:
+
+	public void setCurrentFace(int currentFace) {
+	  currentFace = currentFace;
+	}
+
+      It is indeed strange and incorrect (though it is correct Java and will not give an error if you code it).
+	currentFace refers to the closest definition.  That means it refers to the method parameter variable.
+	So we are taking the value from the currentFace variable and assigning it back to the same variable.
+      How do we instead assign it to the field?
+	Don't forget that the full way to access the field is "this.currentFace"!  
+ 	We dropped the "this." above because Java adds it automatically, but that was in a method that did not have another variable of the same name.
+	Here, we need to explicitly keep the "this." (or we can change the name of the input parameter).
+
+	public void setCurrentFace(int currentFace) {
+	  this.currentFace = currentFace;
+	}
+
+     Now the code is clear.  It is copying data from the method parameter variable "currentFace" to the instance field variable "currentFace" that is in "this" object.
+
+    (Note that setCurrentFace allows any value to be set.  A better solution, would be to use an if statement so that if the value is between 1 and the maximum allowed value. )
+
+   The other action we need for our die is to roll it.  
+      Since rolling is an action, it has to be a method.
+      The method should change the current value/face of the die.
+      Do we want the method to return the value of the roll?  We decided to, but we could have just as easily not since there is the getCurrentFace method to look up the value.
+
+     For the roll, we use the random() method of the Math class:
+     We looked at the random() method in the Java API and see that it takes no input and returns a random double value in the range [0.0, 1.0).  A little math and
+    knowing our types lets us convert the value in [0.0, 1.0) to a value in {1, 2, 3, 4, 5, 6}.
+
+	public int roll() {
+	  int x = (int)(Math.random() * 6 + 1);
+	  this.currentFace = x;
+          return this.currentFace;
+	}
+
+    Note that this code violates our O-O rules listed at the start of the lecture!
+     We are accessing a field directly instead of through the getter/setter methods.
+     If we do that, we are making it more challenging to write code that easily extends our Die class.
+     Remember, that we can change the field we access by typecasting, and the "this" object is typecast in the body of the method to the Die class.
+     If we want to make it easy for another class to extend Die and redefine how a face works, we need to use the methods here (that may be overridden) and not a field (that can't be overridden).
+
+	public int roll() {
+	  setCurrentFace((int)(Math.random() * 6 + 1));
+          return getCurrentFace();
+	}
+
+
+Initial field/variable values
+
+   All local variables do not get default values.  When you create a local variable, the first use of the variable must be to assign a value to it.
+
+   Fields, on the other hand, are given a default value of 0, false, or null, depending on its type.
+   If we do not give currentFace an initial value, it will get value 0.  0 is not a good value for a die.  So we should give the field an initial value.
+
+	private int currentFace = 1;
+
+
+Magic Numbers
+
+  The use of 6 in the roll method is not good.  It is a "magic number". A "magic number" is a number that has a special meaning to the programmer.
+    Here, you need to know that 6 is the size of the die.  
+  Magic numbers should be avoided and replaced with varables.
+  (Any number that is not 0 or 1 is usually magic.)
+
+    First attempt:
+
+	private int dieSize = 6;
+
+	public int roll() {
+	  setCurrentFace((int)(Math.random() * dieSize + 1));
+          return getCurrentFace();
+	}
+
+   That is better because we gave it a name. We can make this better.  The size of a die does not change, so let us indicate that in the field.
+
+Final
+
+  Marking something as final means its value will not be changed.
+
+   - A final variable will not change its value after the first assignment.
+   - A final method will not be overridden.
+   - A final class will not be extended.
+
+	private final int dieSize = 6;
+
+	public int roll() {
+	  setCurrentFace((int)(Math.random() * dieSize + 1));
+          return getCurrentFace();
+	}
+
+
+Constructors: Special methods used to initialize an instance
+
+  Recall how the new operator works:   Die d = new Die();
+     1) Allocates space for the object.
+     2) Initializes the object based on the inputs to new -> it does this by calling an appropriate constructor method with the given input.
+     3) Returns the address (memory location) for the object.
+
+  A constructor is a special method that is called by the new operator to initialize a class.
+  A constructor must have the same name as the class and no return type:
+  	So, a constructor has the form:		public ClassName(inputs) {
+  A constructor is not inherited by classes that extend this class.  Each class must define its own constructors.
+
+Default Constructors:
+    If you do not write a constructor, Java provides a default constructor that takes no input.
+
+Writing a Constructor:
+  Here is a good constructor to specify the size of the die:
+	
+        private int currentFace = 1;
+	private final int dieSize;
+
+	public Die(int dieSize) {
+	  this.dieSize = dieSize;
+	}
+
+    Note that the parameter variable and the instance field have the same name "dieSize".  
+     Java allows local variables inside methods to have the same name as fields.  
+     Inside the method, dieSize refers to the closest definition (the parameter).  If we wanted the field, we needed to use this.dieSize.
+     Java does not allow two fields with the same name nor two local variables (including input parameter variables) with the same name.
+
+  Now we can use the constuctor to create different die of different sizes:
+	
+	Die d8 = new Die(8);
+	Die d20 = new Die(20);
+
+What happends to the default constructor?
+  However, this code will now give an error:  Die d6 = new Die(); 
+     It worked before, what happened?
+
+  IMPORTANT: If you do not define a constructor, Java provides a default one that takes no input.
+             Once you create a constructor for your class, you lose the default constructor.
+
+   It would be nice to still have a default constructor, so we must write our own.
+
+   Writing a method so that it can take a different number or type of input is called "overloading".  We will do that next.
