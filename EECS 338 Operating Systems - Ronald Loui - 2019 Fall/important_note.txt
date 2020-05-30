@@ -1,0 +1,7 @@
+wget -r -np -nH --cut-dirs=2 http://165.227.104.180/week*
+
+where * is the week number, example week1
+
+will download all the files into your local folder with all accompanying figures and additional data on the folder. Sometimes HTML to PDF will not work perfectly. 
+
+There are several important files in each folder which you might want to look at.
