@@ -1,0 +1,21 @@
+trial 2 - 8x8?
+trial4 - new implementation - 500000 iterations, alpha at 0.1, max rad at 3. 6x6 matrix, exp decay
+
+trial5 - like 4 but 50000 iters and normalized features, exp decay
+
+trial6 - max rad at 2, 250000 iters, alpha at 0.25, 6x6, exp decay
+
+first few trials used bubble neighborhood(1-3), (4-7) use Gaussian neighborhood
+
+trial7 - max rad at 3, 250000 iters, alpha at 0.5, alpha=1/curr_iter  (linear decay)
+
+use Epanechnikov neighborhood function and power series learning rate decay
+trial8 - 115000 iters, max rad at 3, alpha at 0.5
+
+use cut gaussian neighborhood and power series learning rate, linear
+radius decay
+
+trial9 - 100000 iters, max rad at 3, alpha at 0.5
+
+use exp decay learning rate, 8x8 matrix
+trial10 - 100000 iters, max rad at 3, alpha at 0.5
